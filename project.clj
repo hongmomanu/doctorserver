@@ -20,7 +20,9 @@
                  [prone "0.8.1"]
                  [ragtime "0.3.8"]
                  [yesql "0.5.0-rc1"]
-                 [com.h2database/h2 "1.4.182"]]
+                 [com.h2database/h2 "1.4.182"]
+                 [com.novemberain/monger "2.0.1"]
+                 ]
 
   :min-lein-version "2.0.0"
   :uberjar-name "doctorserver.jar"
