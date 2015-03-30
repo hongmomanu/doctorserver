@@ -7,13 +7,16 @@
   )
 
 
+(defn write-ObjectId [k v]
+  (if (= org.bson.types.ObjectId (class v))
+    (str v)
+    v))
 
 (defn getuserlocation [id]
     (let [ a (db/get-user id)]
 
-    (println "121")
-    (println (json/write-str a))
-    (resp/json {:foo "bar"})
+    (json/write-str a :value-fn write-ObjectId)
+    ;(resp/json [{:foo "bar"}])
 
     )
 
