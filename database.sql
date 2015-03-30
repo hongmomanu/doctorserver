@@ -68,10 +68,10 @@ CREATE TABLE IF NOT EXISTS patientswithdoctors
 
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,                    --  自增主键
   patientid 		int,                                        --  患者id
-  doctorid   		int,				               --  医生id
-  isreceived   	int,				       	 --  是否接受
-  bgtime             TIMESTAMP,					--开始时间
-  edtime            TIMESTAMP					--结束时间
+  doctorid   		int,				                                 --  医生id
+  isreceived   	int,				       	                        --  是否接受
+  bgtime             TIMESTAMP,					                    --开始时间
+  edtime            TIMESTAMP					                      --结束时间
   
 );
 
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS section
 (
 
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,                    --  自增主键
-  sectionname 	VARCHAR(50)                               --  科室名（疾病名）
+  sectionname 	VARCHAR(50)                                      --  科室名（疾病名）
   
 );
 
