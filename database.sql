@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS patientswithdoctors
   doctorid   		int,				               --  医生id
   isreceived   	int,				       	 --  是否接受
   bgtime             TIMESTAMP，					--开始时间
-  edtime            TIMESTAMP，					--结束时间
+  edtime            TIMESTAMP					--结束时间
   
 );
 
