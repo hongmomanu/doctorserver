@@ -15,12 +15,14 @@ CREATE TABLE IF NOT EXISTS doctors
 
 -- 医生地理信息表
 
-CREATE TABLE IF NOT EXISTS doctorslocation
+CREATE TABLE IF NOT EXISTS userslocation
 (
 
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,                   --  自增主键
   userid int,                                         		--  用户id
-  usertype int，							--  用户类型
+  usertype int,						--  用户类型
+  x     float,            --  x
+  y     float,            --y
   time TIMESTAMP DEFAULT CURRENT_TIMESTAMP  	     		--  注册时间
 
 );
@@ -31,9 +33,9 @@ CREATE TABLE IF NOT EXISTS messages
 
   id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,                   --  自增主键
   fromid 	int,                                              --  发起人id
-  toid   	int，							--  接受人id
-  fromtype    int，							--  发起人类型
-  totype      int，							--  接受人类型
+  toid   	int,						--  接受人id
+  fromtype    int,							--  发起人类型
+  totype      int,							--  接受人类型
   content     VARCHAR(500),                                     --  消息
   time TIMESTAMP DEFAULT CURRENT_TIMESTAMP  	     		--  注册时间
 
@@ -84,6 +86,65 @@ CREATE TABLE IF NOT EXISTS section
   sectionname 	VARCHAR(50)                                      --  科室名（疾病名）
   
 );
+
+
+db.createUser(
+  {
+    user: "jack",
+    pwd: "1313",
+    role:
+    [
+      {
+        role: "userAdminAnyDatabase",
+        db: "admin"
+      }
+    ]
+  }
+)
+
+
+db.runCommand(
+  {
+    usersInfo:"jack",
+    showPrivileges:true
+  }
+)
+
+
+mongo --host 127.0.0.1 -u jack -p 1313 --authenticationDatabase admin
+
+use doctorapp
+show dbs
+show collections
+
+
+
+
+
+db.userslocation.insert(
+   {
+      loc : { type: "Point", coordinates: [120, 30 ] },
+      userid: 1,
+      usertype : 1
+   }
+)
+
+db.userslocation.ensureIndex( { loc : "2dsphere" } )
+
+db.userslocation.find( { loc :
+                  { $geoWithin :
+                    { $centerSphere :
+                       [ [ 121.1 , 30 ] , 1 ]
+                } } } )
+
+
+db.userslocation.find( { loc :
+                   { $nearSphere :
+                     { $geometry :
+                        { type : "Point" ,
+                          coordinates : [ 120, 30 ] } ,
+                       $maxDistance : 100
+             } } } )
 
 
 

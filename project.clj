@@ -22,6 +22,8 @@
                  [yesql "0.5.0-rc1"]
                  [com.h2database/h2 "1.4.182"]
                  [com.novemberain/monger "2.0.1"]
+                 [lib-noir "0.9.1"]
+                 [org.clojure/data.json "0.2.6"]
                  ]
 
   :min-lein-version "2.0.0"

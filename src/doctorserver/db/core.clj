@@ -20,8 +20,8 @@
 #_(defqueries "sql/queries.sql" {:connection db-spec})
 
 ;; Tries to get the Mongo URI from the environment variable
-;; MONGOHQ_URL, otherwise default it to localhost
-(defonce db (let [uri (get (System/getenv) "MONGOHQ_URL" "mongodb://127.0.0.1/doctorserver1")
+;; MONGOHQ_URL, otherwise default it to localhost mongodb://127.0.0.1/jack!:1313!@127.0.0.1/doctorapp
+(defonce db (let [uri (get (System/getenv) "MONGOHQ_URL" "mongodb://jack:1313@127.0.0.1/doctorapp")
                   {:keys [conn db]} (mg/connect-via-uri uri)]
               db))
 
@@ -35,4 +35,9 @@
                     :email email}}))
 
 (defn get-user [id]
-  (mc/find-one-as-map db "users" {:id id}))
+
+  (mc/find-maps
+ db "userslocation" {:userid id}  [:userid])
+
+
+  )
