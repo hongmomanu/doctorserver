@@ -10,7 +10,22 @@
 (defn handler [request]
   (with-channel request channel
     ;; Store the channel somewhere, and use it to sent response to client when interesting event happened
-    (swap! channel-hub assoc channel request)
+    ;;(swap! channel-hub assoc channel nil)
+    (on-receive channel (fn [data]
+                            (let [cdata  (json/read-str data)
+                                  type    (get cdata "type")
+                                  content (get cdata "content")
+                            ]
+                            (cond (= "connect" type) (swap! channel-hub assoc channel content )
+                                 :else (println content))
+                               (println channel)
+
+
+                            )
+
+                               ;(println request)
+                              ;(send! channel data)
+                              ))
     (on-close channel (fn [status]
                         ;; remove from hub when channel get closed
                         (println channel " disconnected. status: " status)
