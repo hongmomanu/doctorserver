@@ -2,7 +2,7 @@
   (:require [doctorserver.layout :as layout]
             [compojure.core :refer [defroutes GET]]
             [clojure.java.io :as io]
-            [doctorserver.controller.user :as user]
+
             ))
 
 (defn home-page []
@@ -14,5 +14,5 @@
 
 (defroutes home-routes
   (GET "/" [] (home-page))
-  (GET "/getuserlocation" [] (user/getuserlocation 1))
+
   (GET "/about" [] (about-page)))

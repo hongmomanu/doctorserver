@@ -92,7 +92,7 @@ db.createUser(
   {
     user: "jack",
     pwd: "1313",
-    role:
+    roles:
     [
       {
         role: "userAdminAnyDatabase",
@@ -111,9 +111,27 @@ db.runCommand(
 )
 
 
-mongo --host 127.0.0.1 -u jack -p 1313 --authenticationDatabase admin
+
+
+
 
 use doctorapp
+
+db.createUser( { user: "jack", pwd: "1313"} )
+mongo  127.0.0.1/doctorapp -u jack -p 1313
+
+
+db.createUser(
+  {
+    user:"jack",
+    pwd:"1313",
+    roles:[
+      {role:"userAdminAnyDatabase",db:"doctorapp"}
+    ]
+  }
+)
+
+
 show dbs
 show collections
 
@@ -128,14 +146,59 @@ db.userslocation.insert(
       usertype : 1
    }
 )
+db.userslocation.insert(
+   {
+      loc : { type: "Point", coordinates: [120.003, 30.005 ] },
+      userid: 2,
+      usertype : 1
+   }
+)
+
+db.userslocation.insert(
+   {
+      loc : { type: "Point", coordinates: [120.003, 30.005 ] },
+      userid: 2,
+      usertype : 1
+   }
+)
+
 
 db.userslocation.ensureIndex( { loc : "2dsphere" } )
 
-db.userslocation.find( { loc :
-                  { $geoWithin :
-                    { $centerSphere :
-                       [ [ 121.1 , 30 ] , 1 ]
-                } } } )
+
+--医生表
+db.doctors.insert(
+   {
+
+	      loc : { type: "Point", coordinates: [120.003, 30.005 ] },
+	      userinfo:{
+	          username:"jack",
+	          password : "1",
+	          realname : "赵医生",
+	          sex:"男",
+	          sectionname:"内科"
+
+	      },
+	      logintime:new Date()
+   	}
+)
+
+
+
+db.doctors.ensureIndex( { loc : "2dsphere" } )
+
+
+--枚举表维护
+
+db.enumerate.insert(
+   {
+	      enumeratename: "骨科",
+        enumeratevalue:"骨科",
+        enumeratetype:"section"
+   }
+)
+
+
 
 
 db.userslocation.find( { loc :

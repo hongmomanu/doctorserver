@@ -24,6 +24,7 @@
                  [com.novemberain/monger "2.0.1"]
                  [lib-noir "0.9.1"]
                  [org.clojure/data.json "0.2.6"]
+                 [http-kit "2.1.16"]
                  ]
 
   :min-lein-version "2.0.0"

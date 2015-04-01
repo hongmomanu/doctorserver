@@ -1,6 +1,8 @@
 (ns doctorserver.handler
   (:require [compojure.core :refer [defroutes routes]]
             [doctorserver.routes.home :refer [home-routes]]
+            [doctorserver.routes.user :refer [user-routes]]
+            [doctorserver.public.websocket :as websocket]
             [doctorserver.middleware
              :refer [development-middleware production-middleware]]
             [doctorserver.session :as session]
@@ -37,7 +39,9 @@
   ;;start the expired session cleanup job
   (cronj/start! session/cleanup-job)
   (timbre/info "\n-=[ doctorserver started successfully"
-               (when (env :dev) "using the development profile") "]=-"))
+               (when (env :dev) "using the development profile") "]=-")
+  (websocket/start-server 3001)
+  )
 
 (defn destroy
   "destroy will be called when your application
@@ -50,6 +54,7 @@
 (def app
   (-> (routes
         home-routes
+        user-routes
         base-routes)
       development-middleware
       production-middleware))

@@ -41,3 +41,10 @@
 
 
   )
+
+(defn get-doctors[]
+    (mc/find-maps
+     db "doctors"
+     )
+
+)
