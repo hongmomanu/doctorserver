@@ -48,3 +48,14 @@
      )
 
 )
+
+(defn create-message [message]
+    (println "insert begin")
+    (mc/insert db "messages" message)
+    (println "insert end")
+
+)
+
+(defn update-message [cond modified]
+(mc/update db "messages" cond modified)
+)

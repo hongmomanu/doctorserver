@@ -2,6 +2,7 @@
   (:require [compojure.core :refer [defroutes routes]]
             [doctorserver.routes.home :refer [home-routes]]
             [doctorserver.routes.user :refer [user-routes]]
+            [doctorserver.routes.doctor :refer [doctor-routes]]
             [doctorserver.public.websocket :as websocket]
             [doctorserver.middleware
              :refer [development-middleware production-middleware]]
@@ -55,6 +56,7 @@
   (-> (routes
         home-routes
         user-routes
+        doctor-routes
         base-routes)
       development-middleware
       production-middleware))

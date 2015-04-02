@@ -198,6 +198,20 @@ db.enumerate.insert(
    }
 )
 
+--消息表维护 (1 doctor,0 patient)
+
+db.messages.insert(
+   {
+	      fromid: "551b4cb83b83719a9aba9c01",
+        toid:"551b4e1d31ad8b836c655377",
+        fromtype:1,
+        totype:1,
+        msgtime:new Date(),
+        content:"hello jack",
+        isread:false
+   }
+)
+
 
 
 
