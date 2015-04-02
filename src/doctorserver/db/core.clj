@@ -5,6 +5,7 @@
     [monger.core :as mg]
                       [monger.collection :as mc]
                       [monger.operators :refer :all]
+
     ))
 
 #_(def db-store (str (.getName (io/file ".")) "/site.db"))
@@ -48,12 +49,14 @@
 )
 
 (defn create-message [message]
-    (mc/insert db "messages" message)
+    (mc/insert-and-return db "messages" message)
 
 )
 
 (defn update-message [cond modified]
-(mc/update db "messages" cond modified)
+
+(mc/update db "messages" cond {$set modified} {:multi true})
+
 )
 
 (defn get-doctor-byusername [username]

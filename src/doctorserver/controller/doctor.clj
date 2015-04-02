@@ -18,20 +18,22 @@
 (defn chatprocess [data channel-hub-key]
 ;;{type chatdoctor, from 551b4cb83b83719a9aba9c01, to 551b4e1d31ad8b836c655377, content 1212}
     (let [ type (get data "type")
-           from (get data "data")
+           from (get data "from")
            to   (get data "to")
            content (get data "content")
            message {:content content :fromid from :toid to :msgtime (l/local-now)}
         ]
-        (println "begin")
      (try
           (do
-          (println message)
-            (db/create-message message)
-             (let [channel (get @channel-hub-key to)]
+
+             (let [
+                 newmessage (db/create-message message)
+                 messagid (:_id newmessage)
+                 channel (get @channel-hub-key to)
+             ]
                (when-not (nil? channel)
                 (send! channel (json/write-str message ) false)
-                (db/update-message  {:toid to} {:isread true} )
+                (db/update-message  {:_id messagid} {:isread true} )
                )
 
              )

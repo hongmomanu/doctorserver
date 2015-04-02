@@ -26,6 +26,7 @@
                  [org.clojure/data.json "0.2.6"]
                  [http-kit "2.1.16"]
                  [clj-time "0.8.0"]
+                 [cheshire "5.1.1"]
                  ]
 
   :min-lein-version "2.0.0"

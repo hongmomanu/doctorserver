@@ -31,7 +31,7 @@
         doctor (db/get-doctor-byusername username)
         userinfo (:userinfo doctor)
     ]
-    (if (and doctor (= password (:password userinfo)))(json/write-str {:success true})
+    (if (and doctor (= password (:password userinfo)))(json/write-str {:success true :user doctor})
     (json/write-str {:success false}))
     )
 )
