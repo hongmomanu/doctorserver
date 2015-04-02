@@ -37,9 +37,7 @@
 (defn get-user [id]
 
   (mc/find-maps
- db "userslocation" {:userid id}  [:userid])
-
-
+        db "userslocation" {:userid id}  [:userid])
   )
 
 (defn get-doctors[]
@@ -50,12 +48,16 @@
 )
 
 (defn create-message [message]
-    (println "insert begin")
     (mc/insert db "messages" message)
-    (println "insert end")
 
 )
 
 (defn update-message [cond modified]
 (mc/update db "messages" cond modified)
+)
+
+(defn get-doctor-byusername [username]
+    (mc/find-one-as-map
+         db "doctors" {:userinfo.username username}
+     )
 )

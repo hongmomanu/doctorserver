@@ -1,9 +1,10 @@
 (ns doctorserver.controller.user
   (:use compojure.core)
   (:require [doctorserver.db.core :as db]
-            [doctorserver.public.common :as common]
+            ;[doctorserver.public.common :as common]
             [noir.response :as resp]
             [clojure.data.json :as json]
+            [monger.json]
             )
   )
 
@@ -13,7 +14,7 @@
 (defn getuserlocation [id]
     (let [ a (db/get-user id)]
 
-    (json/write-str a :value-fn common/write-ObjectId)
+    (json/write-str a )
     ;(resp/json [{:foo "bar"}])
 
     )
@@ -22,7 +23,16 @@
 
 (defn getdoctors []
     (let [doctors (db/get-doctors)]
-        (json/write-str doctors :value-fn common/write-ObjectId)
+        (json/write-str doctors)
+    )
+)
+(defn doctorlogin [username password]
+    (let [
+        doctor (db/get-doctor-byusername username)
+        userinfo (:userinfo doctor)
+    ]
+    (if (and doctor (= password (:password userinfo)))(json/write-str {:success true})
+    (json/write-str {:success false}))
     )
 )
 

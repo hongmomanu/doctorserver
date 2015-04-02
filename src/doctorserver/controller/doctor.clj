@@ -1,7 +1,7 @@
 (ns doctorserver.controller.doctor
   (:use compojure.core  org.httpkit.server)
   (:require [doctorserver.db.core :as db]
-            [doctorserver.public.common :as common]
+            ;;[doctorserver.public.common :as common]
             [noir.response :as resp]
             [clojure.data.json :as json]
             [clj-time.local :as l]
@@ -17,7 +17,6 @@
 
 (defn chatprocess [data channel-hub-key]
 ;;{type chatdoctor, from 551b4cb83b83719a9aba9c01, to 551b4e1d31ad8b836c655377, content 1212}
-(println 1111111111)
     (let [ type (get data "type")
            from (get data "data")
            to   (get data "to")
@@ -36,7 +35,6 @@
                )
 
              )
-                (println "success")
                 {:success true}
             )
           (catch Exception ex
