@@ -69,3 +69,7 @@
          db "doctors" {:userinfo.username username}
      )
 )
+(defn get-doctor-byid [oid]
+  (mc/find-map-by-id db "doctors" oid)
+
+  )
