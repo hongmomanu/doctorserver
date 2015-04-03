@@ -213,6 +213,48 @@ db.messages.insert(
 )
 
 
+--医生vs患者关联表
+db.doctorsvspatients.insert(
+  {
+        doctorid:"551b4cb83b83719a9aba9c01",
+        patientid:"551dfe4dcb4b40507ebc3ba7"
+  }
+)
+
+--医生vs医生关联表
+db.doctorsvsdoctors.insert(
+  {
+        doctorid:"551b4cb83b83719a9aba9c01",
+        rid:"551b4e1d31ad8b836c655377"
+  }
+)
+
+--添加申请表 (1,doctor ;0 patient)
+db.applyfor.insert(
+  {
+        fromid:"551b4cb83b83719a9aba9c01",
+        toid:"551b4e1d31ad8b836c655377",
+        applytype:1
+  }
+)
+
+--患者表
+
+--黑名单(3)
+
+db.blacklist.insert(
+  {
+        patientid:"551dfe4dcb4b40507ebc3ba7",
+        times:0
+  }
+
+)
+
+
+
+
+
+
 
 
 db.userslocation.find( { loc :
