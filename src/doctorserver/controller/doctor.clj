@@ -17,8 +17,8 @@
 (defn getnoread [id channel-hub-key]
   (let [noreadmessage  (db/get-message {:toid  id :isread false})
         channel (get @channel-hub-key id)
-        user (db/get-doctor-byid  (ObjectId. id))
-        noreadmessage-userinfo (map #(conj % {:userinfo (:userinfo user)}) noreadmessage)
+        ;user (db/get-doctor-byid  (ObjectId. id))
+        noreadmessage-userinfo (map #(conj % {:userinfo (:userinfo (db/get-doctor-byid  (ObjectId. (:fromid %))))}) noreadmessage)
         ]
     (send! channel (json/write-str {:type "doctorchat" :data noreadmessage-userinfo} ) false)
     ;(db/update-message  {:toid id} {:isread true})
@@ -41,7 +41,7 @@
              (let [
                  newmessage (db/create-message message)
                  messagid (:_id newmessage)
-                 user (db/get-doctor-byid  (ObjectId. (:toid newmessage)))
+                 user (db/get-doctor-byid  (ObjectId. from))
                  channel (get @channel-hub-key to)
              ]
                (when-not (nil? channel)
