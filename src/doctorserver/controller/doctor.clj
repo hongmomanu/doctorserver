@@ -21,7 +21,7 @@
         noreadmessage-userinfo (map #(conj % {:userinfo (:userinfo (db/get-doctor-byid  (ObjectId. (:fromid %))))}) noreadmessage)
         ]
     (send! channel (json/write-str {:type "doctorchat" :data noreadmessage-userinfo} ) false)
-    ;(db/update-message  {:toid id} {:isread true})
+    (db/update-message  {:toid id} {:isread true})
     )
 
   )
