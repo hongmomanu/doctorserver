@@ -23,11 +23,13 @@
 
   )
 
+
 (defn getdoctors []
     (let [doctors (db/get-doctors)]
         (json/write-str doctors)
     )
 )
+
 (defn getdoctorsbyid [id]
     (let [
            rids (concat

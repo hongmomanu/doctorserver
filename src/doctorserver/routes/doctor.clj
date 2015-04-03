@@ -10,5 +10,6 @@
 (defroutes doctor-routes
 
   (GET "/doctor/test" [] (str "test"))
+  (GET "/doctor/sendmsgtopatient" [doctorid patientid message] (doctor/sendmsgtopatient doctorid patientid message))
 
  )

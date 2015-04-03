@@ -26,6 +26,32 @@
 
   )
 
+(defn sendmsgtopatient [channel-hub-key doctorid patientid message]
+  (let [
+         channel (get @channel-hub-key patientid)
+         message {:content message :fromid doctorid :toid patientid :msgtime (l/local-now) :isread false}
+         newmessage (db/create-message message)
+         messagid (:_id newmessage)
+         user (db/get-doctor-byid  (ObjectId. doctorid))
+         ]
+
+    (try
+      (do
+          (when-not (nil? channel)
+            (send! channel (json/write-str {:type "doctorpatientchat" :data [(conj message {:userinfo (:userinfo user)})]} ) false)
+            (db/update-message  {:_id messagid} {:isread true} )
+            )
+        {:success true}
+        )
+      (catch Exception ex
+        (println (.getMessage ex))
+        {:success false :message (.getMessage ex)}
+        ))
+
+    )
+
+  )
+
 
 (defn chatprocess [data channel-hub-key]
 ;;{type chatdoctor, from 551b4cb83b83719a9aba9c01, to 551b4e1d31ad8b836c655377, content 1212}
