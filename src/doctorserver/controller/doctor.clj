@@ -22,7 +22,6 @@
     (db/update-message  {:toid id} {:isread true})
     )
 
-
   )
 
 
