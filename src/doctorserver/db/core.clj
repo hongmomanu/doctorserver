@@ -76,8 +76,8 @@
     )
   )
 
-(defn get-relation-doctor [id]
-  (mc/find-maps db "doctorsvsdoctors" {:doctorid id})
+(defn get-relation-doctor [cond]
+  (mc/find-maps db "doctorsvsdoctors" cond )
   )
 
 

@@ -30,7 +30,10 @@
 )
 (defn getdoctorsbyid [id]
     (let [
-           rids (map #(ObjectId. (:rid %)) (db/get-relation-doctor id))
+           rids (concat
+                  (map #(ObjectId. (:rid %)) (db/get-relation-doctor {:doctorid id} ))
+                  (map #(ObjectId. (:doctorid %)) (db/get-relation-doctor {:rid id}))
+                  )
            doctors (db/get-doctors-byid  rids)
            ]
         (json/write-str doctors)
