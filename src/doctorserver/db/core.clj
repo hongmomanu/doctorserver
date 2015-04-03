@@ -53,6 +53,11 @@
 
 )
 
+(defn get-message [cond]
+  (mc/find-maps db "messages" cond)
+
+  )
+
 (defn update-message [cond modified]
 
 (mc/update db "messages" cond {$set modified} {:multi true})

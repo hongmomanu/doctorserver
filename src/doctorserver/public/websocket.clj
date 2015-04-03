@@ -21,9 +21,10 @@
                             (cond (= "connect" type) (do
                                                         (swap! channel-hub assoc channel content )
                                                         (swap! channel-hub-key assoc content channel )
+                                                        (doctor/getnoread content channel-hub-key)
                                                         )
                                  :else (doctor/chatprocess cdata channel-hub-key))
-                               (println channel)
+                               (println "mumumu" channel)
 
 
                             )

@@ -14,6 +14,17 @@
 
 
 
+(defn getnoread [id channel-hub-key]
+  (let [noreadmessage  (db/get-message {:toid (ObjectId. id) :isread false})
+        channel (get @channel-hub-key id)
+        ]
+    (send! channel (json/write-str noreadmessage ) false)
+    (db/update-message  {:toid id} {:isread true})
+    )
+
+
+  )
+
 
 (defn chatprocess [data channel-hub-key]
 ;;{type chatdoctor, from 551b4cb83b83719a9aba9c01, to 551b4e1d31ad8b836c655377, content 1212}
@@ -21,7 +32,7 @@
            from (get data "from")
            to   (get data "to")
            content (get data "content")
-           message {:content content :fromid from :toid to :msgtime (l/local-now)}
+           message {:content content :fromid from :toid to :msgtime (l/local-now) :isread false}
         ]
      (try
           (do
