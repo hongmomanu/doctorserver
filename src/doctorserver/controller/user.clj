@@ -39,6 +39,17 @@
         (json/write-str doctors)
     )
 )
+
+(defn getpatientsbyid [id]
+    (let [
+           rids (map #(ObjectId. (:patientid %)) (db/get-relation-patient {:doctorid id} ))
+
+           patients (db/get-patients-byid  rids)
+           ]
+        (json/write-str patients)
+    )
+)
+
 (defn doctorlogin [username password]
     (let [
         doctor (db/get-doctor-byusername username)

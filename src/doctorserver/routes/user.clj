@@ -12,6 +12,7 @@
   (GET "/user/getuserlocation" [] (user/getuserlocation 1))
   (GET "/user/getdoctors" [] (user/getdoctors ))
   (GET "/user/getdoctorsbyid" [id] (user/getdoctorsbyid id))
+  (GET "/user/getpatientsbyid" [id] (user/getpatientsbyid id))
   (POST "/user/doctorlogin" [username password] (user/doctorlogin username password))
 
  )

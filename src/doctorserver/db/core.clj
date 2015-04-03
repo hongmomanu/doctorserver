@@ -76,8 +76,21 @@
     )
   )
 
+
+
 (defn get-relation-doctor [cond]
   (mc/find-maps db "doctorsvsdoctors" cond )
+  )
+
+(defn get-relation-patient [cond]
+  (mc/find-maps db "doctorsvspatients" cond )
+  )
+
+
+(defn get-patients-byid [ids]
+  (mc/find-maps
+    db "patients" {:_id {$in ids}}
+    )
   )
 
 
