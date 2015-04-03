@@ -6,6 +6,8 @@
             [clojure.data.json :as json]
             [monger.json]
             )
+  (:import [org.bson.types ObjectId]
+           )
   )
 
 
@@ -27,7 +29,10 @@
     )
 )
 (defn getdoctorsbyid [id]
-    (let [doctors (db/get-doctors-byid id)]
+    (let [
+           rids (map #(ObjectId. (:rid %)) (db/get-relation-doctor id))
+           doctors (db/get-doctors-byid  rids)
+           ]
         (json/write-str doctors)
     )
 )
