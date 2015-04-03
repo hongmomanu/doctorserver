@@ -41,10 +41,11 @@
              (let [
                  newmessage (db/create-message message)
                  messagid (:_id newmessage)
+                 user (db/get-doctor-byid  (ObjectId. (:toid newmessage)))
                  channel (get @channel-hub-key to)
              ]
                (when-not (nil? channel)
-                (send! channel (json/write-str {:type "doctorchat" :data [message]} ) false)
+                (send! channel (json/write-str {:type "doctorchat" :data [(conj message {:userinfo (:userinfo user)})]} ) false)
                 (db/update-message  {:_id messagid} {:isread true} )
                )
 
