@@ -69,6 +69,15 @@
          db "doctors" {:userinfo.username username}
      )
 )
+(defn get-doctors-byid [ids]
+  (mc/find-maps
+    db "doctors" {:_id {$in ids}}
+    )
+  )
+(defn get-relation-doctor [id]
+  (mc/find-maps db "doctorsvsdoctors" {:doctorid id})
+  )
+
 (defn get-doctor-byid [oid]
   (mc/find-map-by-id db "doctors" oid)
 

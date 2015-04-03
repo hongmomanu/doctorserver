@@ -26,6 +26,11 @@
         (json/write-str doctors)
     )
 )
+(defn getdoctorsbyid [id]
+    (let [doctors (db/get-doctors-byid id)]
+        (json/write-str doctors)
+    )
+)
 (defn doctorlogin [username password]
     (let [
         doctor (db/get-doctor-byusername username)
