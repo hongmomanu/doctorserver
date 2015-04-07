@@ -25,37 +25,43 @@
     )
 
   )
-
+;;doctor recommend
 (defn sendmypatientToDoctor [patientid doctorid fromdoctorid channel-hub-key]
     (try
       (do
         (let [
                channelp (get @channel-hub-key patientid)
                channeld (get @channel-hub-key doctorid)
-               recommend (db/makerecommend {:patientid patientid :doctorid doctorid :fromid fromdoctorid
+               recommend (db/makerecommend {:patientid patientid :doctorid doctorid} {:patientid patientid :doctorid doctorid :fromid fromdoctorid
                                             :isdoctoraccepted false :ispatientaccepted false :rectype 1
                                             :isreadbydoctor false :isreadbypatient false})
+               recommendid (if (.getField recommend "updatedExisting")
+                             (:_id (db/findrecommend {:patientid patientid :doctorid doctorid}))
+                             (.getField recommend "upserted")
+                             )
                patient (db/get-patient-byid (ObjectId. patientid))
                doctor (db/get-doctor-byid  (ObjectId. doctorid))
                ]
 
           (when-not (nil? channelp)
-            (send! channelp (json/write-str {:type "recommend" :data [(conj recommend {:doctor doctor})]} ) false)
-            (db/update-recommend  {:_id (:_id recommend)} {:isreadbypatient true} )
+            (send! channelp (json/write-str {:type "recommend" :data [(conj {:_id recommendid} {:doctor doctor})]} ) false)
+            (db/update-recommend  {:_id recommendid} {:isreadbypatient true} )
             )
 
           (when-not (nil? channeld)
-            (send! channeld (json/write-str {:type "recommend" :data [(conj recommend {:patient patient})]} ) false)
-            (db/update-recommend  {:_id (:_id recommend)} {:isreadbydoctor true} )
+            (send! channeld (json/write-str {:type "recommend" :data [(conj {:_id recommendid} {:patient patient})]} ) false)
+            (db/update-recommend  {:_id recommendid} {:isreadbydoctor true} )
             )
-          {:success true}
+          (resp/json {:success true})
           )
         )
       (catch Exception ex
         (println (.getMessage ex))
-        {:success false :message (.getMessage ex)}
+        (resp/json {:success false :message (.getMessage ex)})
         ))
   )
+
+
 
 (defn sendmsgtopatient [channel-hub-key doctorid patientid message]
   (let [
@@ -83,6 +89,19 @@
 
   )
 
+(defn addblacklist [patientid doctorid]
+  (try
+    (do
+      (db/createblacklist {:doctorid doctorid :patientid patientid} {:doctorid doctorid :patientid patientid})
+
+      (resp/json {:success true})
+      )
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      ))
+
+  )
 
 (defn chatprocess [data channel-hub-key]
 ;;{type chatdoctor, from 551b4cb83b83719a9aba9c01, to 551b4e1d31ad8b836c655377, content 1212}

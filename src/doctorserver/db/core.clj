@@ -105,15 +105,35 @@
 
   )
 
-(defn makerecommend [recommend]
+(defn makerecommend [cond recommend]
 
-  (mc/insert-and-return db "recommend" recommend)
+  (mc/update db "recommend" cond {$set recommend} {:upsert true})
 
   )
 
+(defn findrecommend [cond]
+  (mc/find-one-as-map
+    db "recommend" cond
+    )
+  )
+
 (defn update-recommend [cond modified]
-  (println cond)
-  (println modified)
+
   (mc/update db "recommend" cond {$set modified} {:multi true})
+
+  )
+
+(defn update-custompush [cond modified]
+  (mc/update db "custompush" cond {$set modified} {:upsert true})
+  )
+
+(defn createblacklist [cond modified]
+  (mc/update db "blacklist" cond {$set modified} {:upsert true})
+  )
+
+(defn get-custompush  [cond]
+  (mc/find-one-as-map
+    db "custompush" cond
+    )
 
   )

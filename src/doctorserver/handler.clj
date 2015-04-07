@@ -3,6 +3,7 @@
             [doctorserver.routes.home :refer [home-routes]]
             [doctorserver.routes.user :refer [user-routes]]
             [doctorserver.routes.doctor :refer [doctor-routes]]
+            [doctorserver.routes.settings :refer [settings-routes]]
             [doctorserver.public.websocket :as websocket]
             [doctorserver.middleware
              :refer [development-middleware production-middleware]]
@@ -57,6 +58,7 @@
         home-routes
         user-routes
         doctor-routes
+        settings-routes
         base-routes)
       development-middleware
       production-middleware))

@@ -258,7 +258,22 @@ db.recommend.insert(
 db.blacklist.insert(
   {
         patientid:"551dfe4dcb4b40507ebc3ba7",
+        doctorid:"551b4e1d31ad8b836c655377",
         times:0
+  }
+
+)
+
+--定制推送
+
+db.custompush.insert(
+  {
+        content:"",
+        sendtime:new Date(),
+
+        frequency:"once",
+        doctorid:"551b4e1d31ad8b836c655377"
+
   }
 
 )

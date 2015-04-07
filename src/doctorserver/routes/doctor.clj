@@ -15,6 +15,14 @@
                                                                            patientid doctorid fromdoctorid
                                                                            websocket/channel-hub-key
                                                                            ))
+
+  (POST "/doctor/sendmyDoctorToPatient"[patientid doctorid fromdoctorid] (doctor/sendmypatientToDoctor
+                                                                           patientid doctorid fromdoctorid
+                                                                           websocket/channel-hub-key
+                                                                           ))
+
+  (POST "/doctor/addblacklist"[patientid doctorid ] (doctor/addblacklist patientid doctorid ))
+
   (GET "/doctor/sendmsgtopatient" [doctorid patientid message] (doctor/sendmsgtopatient doctorid patientid message))
 
  )
