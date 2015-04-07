@@ -93,8 +93,20 @@
     )
   )
 
+(defn get-patient-byid [oid]
+  (mc/find-map-by-id
+    db "patients" oid
+    )
+  )
+
 
 (defn get-doctor-byid [oid]
   (mc/find-map-by-id db "doctors" oid)
+
+  )
+
+(defn makerecommend [recommend]
+
+  (mc/insert-and-return db "recommend" recommend)
 
   )

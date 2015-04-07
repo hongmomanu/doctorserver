@@ -238,7 +238,20 @@ db.applyfor.insert(
   }
 )
 
---患者表
+--医生患者推荐表(1,doctor ;0 patient)
+
+db.recommend.insert(
+  {
+      doctorid:"551b4e1d31ad8b836c655377",
+      patientid:"551dfe4dcb4b40507ebc3ba7",
+      fromid:"551b4cb83b83719a9aba9c01",
+      rectype:1,
+      isdoctoraccepted:false,
+      ispatientaccepted:false,
+      isreadbydoctor:false,
+      isreadbypatient:false
+  }
+)
 
 --黑名单(3)
 

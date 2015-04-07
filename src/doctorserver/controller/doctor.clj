@@ -26,6 +26,37 @@
 
   )
 
+(defn sendmypatientToDoctor [patientid doctorid fromdoctorid channel-hub-key]
+    (try
+      (do
+        (let [
+               channelp (get @channel-hub-key patientid)
+               channeld (get @channel-hub-key doctorid)
+               recommend (db/makerecommend {:patientid patientid :doctorid doctorid :fromid fromdoctorid
+                                            :isdoctoraccepted false :ispatientaccepted false :rectype 1
+                                            :isreadbydoctor false :isreadbypatient false})
+               patient (db/get-patient-byid (ObjectId. patientid))
+               doctor (db/get-doctor-byid  (ObjectId. doctorid))
+               ]
+
+          (when-not (nil? channelp)
+            (send! channelp (json/write-str {:type "recommend" :data [(conj message {:doctor doctor})]} ) false)
+            (db/update-recommend  {:_id recommend} {:isreadbypatient true} )
+            )
+
+          (when-not (nil? channeld)
+            (send! channeld (json/write-str {:type "recommend" :data [(conj message {:patient patient})]} ) false)
+            (db/update-recommend  {:_id recommend} {:isreadbydoctor true} )
+            )
+          {:success true}
+          )
+        )
+      (catch Exception ex
+        (println (.getMessage ex))
+        {:success false :message (.getMessage ex)}
+        ))
+  )
+
 (defn sendmsgtopatient [channel-hub-key doctorid patientid message]
   (let [
          channel (get @channel-hub-key patientid)
