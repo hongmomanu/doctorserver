@@ -40,13 +40,13 @@
                ]
 
           (when-not (nil? channelp)
-            (send! channelp (json/write-str {:type "recommend" :data [(conj message {:doctor doctor})]} ) false)
-            (db/update-recommend  {:_id recommend} {:isreadbypatient true} )
+            (send! channelp (json/write-str {:type "recommend" :data [(conj recommend {:doctor doctor})]} ) false)
+            (db/update-recommend  {:_id (:_id recommend)} {:isreadbypatient true} )
             )
 
           (when-not (nil? channeld)
-            (send! channeld (json/write-str {:type "recommend" :data [(conj message {:patient patient})]} ) false)
-            (db/update-recommend  {:_id recommend} {:isreadbydoctor true} )
+            (send! channeld (json/write-str {:type "recommend" :data [(conj recommend {:patient patient})]} ) false)
+            (db/update-recommend  {:_id (:_id recommend)} {:isreadbydoctor true} )
             )
           {:success true}
           )

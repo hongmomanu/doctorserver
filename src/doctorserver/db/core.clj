@@ -110,3 +110,10 @@
   (mc/insert-and-return db "recommend" recommend)
 
   )
+
+(defn update-recommend [cond modified]
+  (println cond)
+  (println modified)
+  (mc/update db "recommend" cond {$set modified} {:multi true})
+
+  )

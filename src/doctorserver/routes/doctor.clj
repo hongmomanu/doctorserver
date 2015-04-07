@@ -1,6 +1,6 @@
 (ns doctorserver.routes.doctor
   (:require [doctorserver.layout :as layout]
-            [compojure.core :refer [defroutes GET]]
+            [compojure.core :refer [defroutes GET POST]]
             [clojure.java.io :as io]
             [doctorserver.controller.doctor :as doctor]
             [doctorserver.public.websocket :as websocket]
