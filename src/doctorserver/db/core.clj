@@ -117,6 +117,13 @@
     )
   )
 
+(defn findrecommends [cond]
+  (mc/find-maps
+    db "recommend" cond
+    )
+  )
+
+
 (defn update-recommend [cond modified]
 
   (mc/update db "recommend" cond {$set modified} {:multi true})

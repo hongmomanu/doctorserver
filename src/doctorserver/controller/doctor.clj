@@ -12,19 +12,49 @@
               )
   )
 
+(declare noreadrecommend-process)
+(defn noreadrecommend-process [noreadrecommend]
+  (let [
+         fromid (:fromid noreadrecommend)
+         doctorid (:doctorid noreadrecommend)
+         patientid (:patientid noreadrecommend)
+         rectype (:rectype noreadrecommend)
+         frominfo (if (= rectype 1) (db/get-doctor-byid  (ObjectId. fromid))
+                    (db/get-patient-byid  (ObjectId. fromid))
+                    )
 
+         patientinfo (db/get-patient-byid  (ObjectId. patientid))
 
-(defn getnoread [id channel-hub-key]
-  (let [noreadmessage  (db/get-message {:toid  id :isread false})
-        channel (get @channel-hub-key id)
-        ;user (db/get-doctor-byid  (ObjectId. id))
-        noreadmessage-userinfo (map #(conj % {:userinfo (:userinfo (db/get-doctor-byid  (ObjectId. (:fromid %))))}) noreadmessage)
-        ]
-    (send! channel (json/write-str {:type "doctorchat" :data noreadmessage-userinfo} ) false)
-    (db/update-message  {:toid id} {:isread true})
+         ]
+    (conj noreadrecommend {:frominfo frominfo :patientinfo patientinfo})
+
     )
 
   )
+(defn getnoread [id channel-hub-key]
+  (let [
+         noreadmessage  (db/get-message {:toid  id :isread false})
+
+         noreadrecommend (db/findrecommends {:doctorid id :isreadbydoctor false})
+
+
+         channel (get @channel-hub-key id)
+        ;user (db/get-doctor-byid  (ObjectId. id))
+        noreadmessage-userinfo (map #(conj % {:userinfo (:userinfo (db/get-doctor-byid  (ObjectId. (:fromid %))))}) noreadmessage)
+
+         noreadrecommend-userinfo (map #(noreadrecommend-process %) noreadrecommend)
+        ]
+    (send! channel (json/write-str {:type "doctorchat" :data noreadmessage-userinfo} ) false)
+
+    (send! channel (json/write-str {:type "recommend" :data noreadrecommend-userinfo} ) false)
+
+    (db/update-message  {:toid id} {:isread true})
+    (db/update-recommend   {:doctorid id} {:isreadbydoctor true})
+    )
+
+  )
+
+
 ;;doctor recommend
 (defn sendmypatientToDoctor [patientid doctorid fromdoctorid channel-hub-key]
     (try
