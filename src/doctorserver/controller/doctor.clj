@@ -36,8 +36,6 @@
          noreadmessage  (db/get-message {:toid  id :isread false})
 
          noreadrecommend (db/findrecommends {:doctorid id :isreadbydoctor false})
-
-
          channel (get @channel-hub-key id)
         ;user (db/get-doctor-byid  (ObjectId. id))
         noreadmessage-userinfo (map #(conj % {:userinfo (:userinfo (db/get-doctor-byid  (ObjectId. (:fromid %))))}) noreadmessage)
