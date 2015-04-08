@@ -93,6 +93,12 @@
     )
   )
 
+(defn get-blaclist [cond]
+  (mc/find-maps
+    db "blacklist" cond
+    )
+  )
+
 (defn get-patient-byid [oid]
   (mc/find-map-by-id
     db "patients" oid

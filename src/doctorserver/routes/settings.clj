@@ -17,5 +17,6 @@
                                                                            ))
 
   (POST "/settings/getcustompush" [ doctorid ] (settings/getcustompush  doctorid ))
+  (GET "/settings/getblaclistbyid" [ doctorid ] (settings/getblaclistbyid  doctorid ))
 
  )

@@ -49,5 +49,26 @@
 
   )
 
+(defn getblaclistbyid [doctorid]
+
+  (try
+    (do
+      (let [
+             list (db/get-blaclist  {:doctorid doctorid} )
+             patientlist (map #(conj % {:patientinfo (db/get-patient-byid (ObjectId. (:patientid %)))}) list)
+             ]
+        (resp/json patientlist)
+        )
+
+      )
+    (catch Exception ex
+      (println  (.getMessage ex))
+      (resp/json [])
+      ))
+
+
+
+  )
+
 
 
