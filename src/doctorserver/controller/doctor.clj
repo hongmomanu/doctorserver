@@ -52,7 +52,59 @@
 
   )
 
+(defn acceptrecommend [rid channel-hub-key]
+  (try
+    (do
+      (let [
+              update (db/update-recommend  {:_id (ObjectId. rid)} {:isdoctoraccepted true} )
+              updateobj (db/findrecommend {:_id (ObjectId. rid)})
+             ]
+        (futrue (sendrecommendconfirm updateobj channel-hub-key))
+        (resp/json {:success true})
+        )
 
+      )
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      ))
+  )
+
+(defn sendrecommendconfirm [recommend channel-hub-key]
+  (when (and (:isdoctoraccepted recommend) (:ispatientaccepted recommend))
+
+     (let [
+           patientid (:patientid recommend)
+
+           doctorid (:doctorid recommend)
+
+           info (noreadrecommend-process recommend)
+
+           channelp (get @channel-hub-key patientid)
+
+           channeld (get @channel-hub-key doctorid)
+
+           ]
+
+       (db/makedoctorsvspatients {:doctorid doctorid :patientid patientid} {:doctorid doctorid :patientid patientid})
+
+       (when-not (nil? channelp)
+         (send! channelp (json/write-str {:type "recommendconfirm" :data [info]} ) false)
+         ;(db/update-recommend  {:_id recommendid} {:isreadbypatient true} )
+         )
+
+       (when-not (nil? channeld)
+         (send! channeld (json/write-str {:type "recommendconfirm" :data [info]} ) false)
+         ;(db/update-recommend  {:_id recommendid} {:isreadbydoctor true} )
+         )
+
+      )
+
+    )
+
+
+
+  )
 ;;doctor recommend
 (defn sendmypatientToDoctor [patientid doctorid fromdoctorid channel-hub-key]
     (try
@@ -63,21 +115,21 @@
                recommend (db/makerecommend {:patientid patientid :doctorid doctorid} {:patientid patientid :doctorid doctorid :fromid fromdoctorid
                                             :isdoctoraccepted false :ispatientaccepted false :rectype 1
                                             :isreadbydoctor false :isreadbypatient false})
-               recommendid (if (.getField recommend "updatedExisting")
-                             (:_id (db/findrecommend {:patientid patientid :doctorid doctorid}))
-                             (.getField recommend "upserted")
-                             )
+
+               recommendmap (db/findrecommend {:patientid patientid :doctorid doctorid})
+               recommendid (:_id recommendmap)
+
                patient (db/get-patient-byid (ObjectId. patientid))
                doctor (db/get-doctor-byid  (ObjectId. doctorid))
                ]
 
           (when-not (nil? channelp)
-            (send! channelp (json/write-str {:type "recommend" :data [(conj {:_id recommendid} {:doctor doctor})]} ) false)
+            (send! channelp (json/write-str {:type "recommend" :data [(noreadrecommend-process recommendmap)]} ) false)
             (db/update-recommend  {:_id recommendid} {:isreadbypatient true} )
             )
 
           (when-not (nil? channeld)
-            (send! channeld (json/write-str {:type "recommend" :data [(conj {:_id recommendid} {:patient patient})]} ) false)
+            (send! channeld (json/write-str {:type "recommend" :data [(noreadrecommend-process recommendmap)]} ) false)
             (db/update-recommend  {:_id recommendid} {:isreadbydoctor true} )
             )
           (resp/json {:success true})

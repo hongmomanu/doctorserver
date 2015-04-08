@@ -111,6 +111,12 @@
 
   )
 
+(defn makedoctorsvspatients [cond recommend]
+
+  (mc/update db "doctorsvspatients" cond {$set recommend} {:upsert true})
+
+  )
+
 (defn findrecommend [cond]
   (mc/find-one-as-map
     db "recommend" cond
@@ -128,6 +134,10 @@
 
   (mc/update db "recommend" cond {$set modified} {:multi true})
 
+  )
+
+(defn update-recommend-return [data]
+  (mc/save-and-return db "recommend" )
   )
 
 (defn update-custompush [cond modified]

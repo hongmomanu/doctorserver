@@ -23,6 +23,8 @@
 
   (POST "/doctor/addblacklist"[patientid doctorid ] (doctor/addblacklist patientid doctorid ))
 
+  (POST "/doctor/acceptrecommend"[rid ] (doctor/acceptrecommend rid websocket/channel-hub-key))
+
   (GET "/doctor/sendmsgtopatient" [doctorid patientid message] (doctor/sendmsgtopatient doctorid patientid message))
 
  )
