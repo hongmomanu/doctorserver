@@ -18,11 +18,21 @@
                                   type    (get cdata "type")
                                   content (get cdata "content")
                             ]
-                            (cond (= "connect" type) (do
+                            (cond (= "doctorconnect" type) (do
                                                         (swap! channel-hub assoc channel content )
                                                         (swap! channel-hub-key assoc content channel )
                                                         (doctor/getnoread content channel-hub-key)
                                                         )
+                                (= "patientconnect" type)(
+                                                           do
+                                                           (swap! channel-hub assoc channel content )
+                                                           (swap! channel-hub-key assoc content channel )
+
+                                                           )
+
+                              (= "doctorchat" type)(do
+                                                     (doctor/chatprocess cdata channel-hub-key)
+                                                     )
                                  :else (doctor/chatprocess cdata channel-hub-key))
                                (println "mumumu" channel)
 

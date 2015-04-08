@@ -12,7 +12,7 @@
               )
   )
 
-(declare noreadrecommend-process)
+(declare noreadrecommend-process sendrecommendconfirm)
 (defn noreadrecommend-process [noreadrecommend]
   (let [
          fromid (:fromid noreadrecommend)
@@ -35,7 +35,7 @@
   (let [
          noreadmessage  (db/get-message {:toid  id :isread false})
 
-         noreadrecommend (db/findrecommends {:doctorid id :isreadbydoctor false})
+         noreadrecommend (db/findrecommends {:doctorid id :isreadbydoctor false :isdoctoraccepted false})
          channel (get @channel-hub-key id)
         ;user (db/get-doctor-byid  (ObjectId. id))
         noreadmessage-userinfo (map #(conj % {:userinfo (:userinfo (db/get-doctor-byid  (ObjectId. (:fromid %))))}) noreadmessage)
@@ -59,7 +59,7 @@
               update (db/update-recommend  {:_id (ObjectId. rid)} {:isdoctoraccepted true} )
               updateobj (db/findrecommend {:_id (ObjectId. rid)})
              ]
-        (futrue (sendrecommendconfirm updateobj channel-hub-key))
+        (future (sendrecommendconfirm updateobj channel-hub-key))
         (resp/json {:success true})
         )
 
@@ -107,33 +107,40 @@
   )
 ;;doctor recommend
 (defn sendmypatientToDoctor [patientid doctorid fromdoctorid channel-hub-key]
+
     (try
+
       (do
-        (let [
-               channelp (get @channel-hub-key patientid)
-               channeld (get @channel-hub-key doctorid)
-               recommend (db/makerecommend {:patientid patientid :doctorid doctorid} {:patientid patientid :doctorid doctorid :fromid fromdoctorid
-                                            :isdoctoraccepted false :ispatientaccepted false :rectype 1
-                                            :isreadbydoctor false :isreadbypatient false})
+        (if (> (count (db/get-relation-patient {:patientid patientid :doctorid doctorid})) 0)
+          (resp/json {:success false :message "关系已建立，无需推荐"})
+          (let [
+                 channelp (get @channel-hub-key patientid)
+                 channeld (get @channel-hub-key doctorid)
+                 recommend (db/makerecommend {:patientid patientid :doctorid doctorid} {:patientid patientid :doctorid doctorid :fromid fromdoctorid
+                                                                                        :isdoctoraccepted false :ispatientaccepted false :rectype 1
+                                                                                        :isreadbydoctor false :isreadbypatient false})
 
-               recommendmap (db/findrecommend {:patientid patientid :doctorid doctorid})
-               recommendid (:_id recommendmap)
+                 recommendmap (db/findrecommend {:patientid patientid :doctorid doctorid})
+                 recommendid (:_id recommendmap)
 
-               patient (db/get-patient-byid (ObjectId. patientid))
-               doctor (db/get-doctor-byid  (ObjectId. doctorid))
-               ]
+                 patient (db/get-patient-byid (ObjectId. patientid))
+                 doctor (db/get-doctor-byid  (ObjectId. doctorid))
+                 ]
 
-          (when-not (nil? channelp)
-            (send! channelp (json/write-str {:type "recommend" :data [(noreadrecommend-process recommendmap)]} ) false)
-            (db/update-recommend  {:_id recommendid} {:isreadbypatient true} )
+            (when-not (nil? channelp)
+              (send! channelp (json/write-str {:type "recommend" :data [(noreadrecommend-process recommendmap)]} ) false)
+              (db/update-recommend  {:_id recommendid} {:isreadbypatient true} )
+              )
+
+            (when-not (nil? channeld)
+              (send! channeld (json/write-str {:type "recommend" :data [(noreadrecommend-process recommendmap)]} ) false)
+              (db/update-recommend  {:_id recommendid} {:isreadbydoctor true} )
+              )
+            (resp/json {:success true})
             )
 
-          (when-not (nil? channeld)
-            (send! channeld (json/write-str {:type "recommend" :data [(noreadrecommend-process recommendmap)]} ) false)
-            (db/update-recommend  {:_id recommendid} {:isreadbydoctor true} )
-            )
-          (resp/json {:success true})
           )
+
         )
       (catch Exception ex
         (println (.getMessage ex))
