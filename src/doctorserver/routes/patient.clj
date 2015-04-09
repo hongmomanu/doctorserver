@@ -11,6 +11,7 @@
 (defroutes patient-routes
 
   (GET "/patient/getmypatientsbyid" [ patientid ] (patient/getmypatientsbyid  patientid ))
+
   (GET "/patient/getmydoctorsbyid" [ patientid ] (patient/getmydoctorsbyid  patientid ))
 
 
