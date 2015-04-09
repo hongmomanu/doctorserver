@@ -1,6 +1,7 @@
 (ns doctorserver.routes.home
   (:require [doctorserver.layout :as layout]
             [compojure.core :refer [defroutes GET]]
+            [ring.util.response :as resp]
             [clojure.java.io :as io]
 
             ))
@@ -14,5 +15,8 @@
 
 (defroutes home-routes
   (GET "/" [] (home-page))
+
+    (GET "/downloadtest/*" [] (resp/redirect "/cordova-app-hello-world-3.6.3.tar.gz"))
+
 
   (GET "/about" [] (about-page)))

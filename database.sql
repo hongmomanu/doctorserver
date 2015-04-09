@@ -187,6 +187,14 @@ db.doctors.insert(
 
 db.doctors.ensureIndex( { loc : "2dsphere" } )
 
+--患者表
+
+db.patients.insert({
+username : "jane",
+realname : "王小明",
+password:"1"
+
+})
 
 --枚举表维护
 

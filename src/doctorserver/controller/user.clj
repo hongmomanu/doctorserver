@@ -61,4 +61,15 @@
     (json/write-str {:success false}))
     )
 )
+(defn patientlogin [username password]
+    (let [
+        patient (db/get-patient-byusername username)
+
+    ]
+      (println patient )
+      (println password )
+    (if (and patient (= password (:password patient)))(json/write-str {:success true :user patient})
+    (json/write-str {:success false}))
+    )
+)
 
