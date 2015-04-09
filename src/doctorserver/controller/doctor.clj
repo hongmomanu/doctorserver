@@ -149,7 +149,7 @@
   )
 
 
-
+;; send message to my patient
 (defn sendmsgtopatient [channel-hub-key doctorid patientid message]
   (let [
          channel (get @channel-hub-key patientid)
@@ -176,6 +176,7 @@
 
   )
 
+;; add black list
 (defn addblacklist [patientid doctorid]
   (try
     (do
@@ -190,6 +191,7 @@
 
   )
 
+;; chat process func begin here
 (defn chatprocess [data channel-hub-key]
 ;;{type chatdoctor, from 551b4cb83b83719a9aba9c01, to 551b4e1d31ad8b836c655377, content 1212}
     (let [ type (get data "type")

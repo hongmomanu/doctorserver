@@ -27,12 +27,14 @@
                                                            do
                                                            (swap! channel-hub assoc channel content )
                                                            (swap! channel-hub-key assoc content channel )
+                                                           (println content)
 
                                                            )
 
                               (= "doctorchat" type)(do
                                                      (doctor/chatprocess cdata channel-hub-key)
                                                      )
+
                                  :else (doctor/chatprocess cdata channel-hub-key))
                                (println "mumumu" channel)
 
