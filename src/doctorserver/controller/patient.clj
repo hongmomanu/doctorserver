@@ -24,14 +24,27 @@
          mydoctors (db/get-relation-patient {:patientid patientid})
          doctorallpatients (map #(patient-process (db/get-relation-patient {:doctorid (:doctorid %)})) mydoctors)
          patients (apply concat  doctorallpatients)
+         filters (filter (fn [x]
+                           (not= (:_id (:patientinfo x)) patientid))
+                   patients)
          ]
 
-    (println mydoctors)
-    (println doctorallpatients)
 
-    (resp/json patients)
+
+    (resp/json filters)
 
     )
+
+  )
+
+(defn getmydoctorsbyid [patientid]
+  (let [
+         mydoctors (db/get-relation-patient {:patientid patientid})
+         doctorinfo (map #(db/get-doctor-byid (ObjectId. (:doctorid %))) mydoctors)
+         ]
+    (resp/json doctorinfo)
+    )
+
 
   )
 
