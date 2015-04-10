@@ -213,6 +213,7 @@
            to   (get data "to")
            content (get data "content")
            fromtype (get data "fromtype")
+           imgid (get data "imgid")
            message {:content content :fromid from :toid to
                     :msgtime (l/local-now) :isread false
                     :fromtype fromtype
@@ -226,11 +227,19 @@
                  messagid (:_id newmessage)
                  user (if (= fromtype 1) (db/get-doctor-byid  (ObjectId. from)) (db/get-patient-byid  (ObjectId. from)))
                  channel (get @channel-hub-key to)
+                 channelfrom (get @channel-hub-key from)
              ]
                (when-not (nil? channel)
-                (send! channel (json/write-str {:type "doctorchat" :data [(conj message {:userinfo  user})]} ) false)
-                (db/update-message  {:_id messagid} {:isread true} )
+                (send! channel (json/write-str {:type "doctorchat" :data [(conj newmessage {:userinfo  user})]} ) false)
+
+                 (db/update-message  {:_id messagid} {:isread true} )
                )
+
+               (when-not (nil? channelfrom)
+                 (send! channelfrom (json/write-str {:type "chatsuc" :data {:imgid imgid :toid to}} ) false)
+                 ;(db/update-message  {:_id messagid} {:isread true} )
+                 )
+
 
              )
                 {:success true}
