@@ -37,6 +37,8 @@
 
   )
 
+
+
 (defn getmydoctorsbyid [patientid]
   (let [
          mydoctors (db/get-relation-patient {:patientid patientid})

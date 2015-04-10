@@ -22,41 +22,53 @@
          frominfo (if (= rectype 1) (db/get-doctor-byid  (ObjectId. fromid))
                     (db/get-patient-byid  (ObjectId. fromid))
                     )
+         doctorinfo (db/get-doctor-byid (ObjectId. doctorid))
 
          patientinfo (db/get-patient-byid  (ObjectId. patientid))
 
          ]
-    (conj noreadrecommend {:frominfo frominfo :patientinfo patientinfo})
+    (conj noreadrecommend {:frominfo frominfo :patientinfo patientinfo :doctorinfo doctorinfo})
 
     )
-
   )
-(defn getnoread [id channel-hub-key]
+(defn getnoread [id readtype channel-hub-key]
   (let [
-         noreadmessage  (db/get-message {:toid  id :isread false})
+         noreadmessage  (db/get-message {:toid  id :isread false :fromtype 1})
+         noreadmessage-patient  (db/get-message {:toid  id :isread false :fromtype 0})
 
-         noreadrecommend (db/findrecommends {:doctorid id :isreadbydoctor false :isdoctoraccepted false})
+
+         noreadrecommend (if (= 1 readtype)
+                           (db/findrecommends {:doctorid id :isreadbydoctor false })
+                           (db/findrecommends {:patientid id :isreadbypatient false })
+                           )
          channel (get @channel-hub-key id)
         ;user (db/get-doctor-byid  (ObjectId. id))
         noreadmessage-userinfo (map #(conj % {:userinfo (:userinfo (db/get-doctor-byid  (ObjectId. (:fromid %))))}) noreadmessage)
-
+         noreadmessage-patientinfo (map #(conj % {:patientinfo (db/get-patient-byid  (ObjectId. (:fromid %)))}) noreadmessage-patient)
          noreadrecommend-userinfo (map #(noreadrecommend-process %) noreadrecommend)
         ]
-    (send! channel (json/write-str {:type "doctorchat" :data noreadmessage-userinfo} ) false)
+    (send! channel (json/write-str {:type "doctorchat" :data
+    (concat noreadmessage-userinfo noreadmessage-patientinfo)} ) false)
 
     (send! channel (json/write-str {:type "recommend" :data noreadrecommend-userinfo} ) false)
 
     (db/update-message  {:toid id} {:isread true})
-    (db/update-recommend   {:doctorid id} {:isreadbydoctor true})
+    (if (= 1 readtype) (db/update-recommend   {:doctorid id} {:isreadbydoctor true})
+      (db/update-recommend   {:patientid id} {:isreadbypatient true}))
     )
 
   )
 
-(defn acceptrecommend [rid channel-hub-key]
+
+
+
+(defn acceptrecommend [rid type channel-hub-key]
   (try
     (do
       (let [
-              update (db/update-recommend  {:_id (ObjectId. rid)} {:isdoctoraccepted true} )
+              update (if (= 1 type) (db/update-recommend  {:_id (ObjectId. rid)} {:isdoctoraccepted true} )
+                       (db/update-recommend  {:_id (ObjectId. rid)} {:ispatientaccepted true} )
+                       )
               updateobj (db/findrecommend {:_id (ObjectId. rid)})
              ]
         (future (sendrecommendconfirm updateobj channel-hub-key))
@@ -106,7 +118,7 @@
 
   )
 ;;doctor recommend
-(defn sendmypatientToDoctor [patientid doctorid fromdoctorid channel-hub-key]
+(defn sendmypatientToDoctor [patientid doctorid fromdoctorid rectype channel-hub-key ]
 
     (try
 
@@ -117,7 +129,7 @@
                  channelp (get @channel-hub-key patientid)
                  channeld (get @channel-hub-key doctorid)
                  recommend (db/makerecommend {:patientid patientid :doctorid doctorid} {:patientid patientid :doctorid doctorid :fromid fromdoctorid
-                                                                                        :isdoctoraccepted false :ispatientaccepted false :rectype 1
+                                                                                        :isdoctoraccepted false :ispatientaccepted false :rectype rectype
                                                                                         :isreadbydoctor false :isreadbypatient false})
 
                  recommendmap (db/findrecommend {:patientid patientid :doctorid doctorid})
@@ -128,11 +140,13 @@
                  ]
 
             (when-not (nil? channelp)
+              (println "channelp")
               (send! channelp (json/write-str {:type "recommend" :data [(noreadrecommend-process recommendmap)]} ) false)
               (db/update-recommend  {:_id recommendid} {:isreadbypatient true} )
               )
 
             (when-not (nil? channeld)
+              (println "channeld")
               (send! channeld (json/write-str {:type "recommend" :data [(noreadrecommend-process recommendmap)]} ) false)
               (db/update-recommend  {:_id recommendid} {:isreadbydoctor true} )
               )
@@ -192,13 +206,17 @@
   )
 
 ;; chat process func begin here
-(defn chatprocess [data channel-hub-key]
+(defn chatprocess [data  channel-hub-key]
 ;;{type chatdoctor, from 551b4cb83b83719a9aba9c01, to 551b4e1d31ad8b836c655377, content 1212}
     (let [ type (get data "type")
            from (get data "from")
            to   (get data "to")
            content (get data "content")
-           message {:content content :fromid from :toid to :msgtime (l/local-now) :isread false}
+           fromtype (get data "fromtype")
+           message {:content content :fromid from :toid to
+                    :msgtime (l/local-now) :isread false
+                    :fromtype fromtype
+                    }
         ]
      (try
           (do
@@ -206,11 +224,11 @@
              (let [
                  newmessage (db/create-message message)
                  messagid (:_id newmessage)
-                 user (db/get-doctor-byid  (ObjectId. from))
+                 user (if (= fromtype 1) (db/get-doctor-byid  (ObjectId. from)) (db/get-patient-byid  (ObjectId. from)))
                  channel (get @channel-hub-key to)
              ]
                (when-not (nil? channel)
-                (send! channel (json/write-str {:type "doctorchat" :data [(conj message {:userinfo (:userinfo user)})]} ) false)
+                (send! channel (json/write-str {:type "doctorchat" :data [(conj message {:userinfo  user})]} ) false)
                 (db/update-message  {:_id messagid} {:isread true} )
                )
 

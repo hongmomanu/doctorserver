@@ -21,13 +21,14 @@
                             (cond (= "doctorconnect" type) (do
                                                         (swap! channel-hub assoc channel content )
                                                         (swap! channel-hub-key assoc content channel )
-                                                        (doctor/getnoread content channel-hub-key)
+                                                        (doctor/getnoread content 1 channel-hub-key)
                                                         )
                                 (= "patientconnect" type)(
                                                            do
                                                            (swap! channel-hub assoc channel content )
                                                            (swap! channel-hub-key assoc content channel )
                                                            (println content)
+                                                           (doctor/getnoread content 0 channel-hub-key)
 
                                                            )
 

@@ -13,17 +13,19 @@
   (GET "/doctor/test" [] (str "test"))
   (POST "/doctor/sendmypatientToDoctor"[patientid doctorid fromdoctorid] (doctor/sendmypatientToDoctor
                                                                            patientid doctorid fromdoctorid
+                                                                           1
                                                                            websocket/channel-hub-key
                                                                            ))
 
   (POST "/doctor/sendmyDoctorToPatient"[patientid doctorid fromdoctorid] (doctor/sendmypatientToDoctor
                                                                            patientid doctorid fromdoctorid
+                                                                           1
                                                                            websocket/channel-hub-key
                                                                            ))
 
   (POST "/doctor/addblacklist"[patientid doctorid ] (doctor/addblacklist patientid doctorid ))
 
-  (POST "/doctor/acceptrecommend"[rid ] (doctor/acceptrecommend rid websocket/channel-hub-key))
+  (POST "/doctor/acceptrecommend"[rid ] (doctor/acceptrecommend rid 1 websocket/channel-hub-key))
 
   (GET "/doctor/sendmsgtopatient" [doctorid patientid message] (doctor/sendmsgtopatient doctorid patientid message))
 
