@@ -47,6 +47,13 @@
      )
 
 )
+(defn get-doctors-by-cond [cond]
+
+  (mc/find-maps
+    db "doctors" cond
+    )
+
+  )
 
 (defn create-message [message]
     (mc/insert-and-return db "messages" message)
@@ -56,6 +63,9 @@
 (defn get-message [cond]
   (mc/find-maps db "messages" cond)
 
+  )
+(defn get-message-num [cond]
+  (mc/count db "messages" cond)
   )
 
 (defn update-message [cond modified]
@@ -164,4 +174,26 @@
     db "custompush" cond
     )
 
+  )
+(defn get-apply-by-pid-dic [cond]
+
+  (mc/find-one-as-map
+    db "applyquick" cond
+    )
+  )
+(defn make-apply-by-pid-dic [cond modified]
+
+  (mc/update db "applyquick" cond {$set modified} {:upsert true})
+
+  )
+
+(defn get-money-byid [userid]
+  (mc/find-one-as-map
+    db "money" {:userid userid}
+    )
+
+  )
+
+(defn update-money-byid [cond modified]
+  (mc/update db "money" cond {$set modified} {:upsert true})
   )

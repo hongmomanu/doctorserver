@@ -15,5 +15,8 @@
 
     )
 
+(defn lazy-contains? [col key]
+  (some #{key} col))
+
 
 

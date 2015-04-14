@@ -297,6 +297,16 @@ db.applyquick.insert(
 }
 )
 
+--用户资金表
+db.money.insert(
+ {
+     totalmoney:1,
+     userid:"551dfe4dcb4b40507ebc3ba7"
+ }
+)
+
+
+
 
 
 
