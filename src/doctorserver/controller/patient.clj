@@ -171,14 +171,14 @@
 
 
 
-(defn getquickdoctorsbyid  [patientid distance]
+(defn getquickdoctorsbyid  [patientid distance lon lat]
   (let [
          mydoctors (getmydoctorsbyid patientid false)
          nearbydoctors (db/get-doctors-by-cond  { :loc
                                                   { "$nearSphere"
                                                     { "$geometry"
                                                       {:type   "Point"
-                                                      :coordinates  [ 120.003  30.004 ]
+                                                      :coordinates  [ (read-string lon)  (read-string lat) ]
                                                        }
                                                       "$maxDistance"  (read-string distance)
                                                       } } } )

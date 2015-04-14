@@ -17,7 +17,8 @@
   (GET "/patient/getmydoctorsbyid" [ patientid ] (patient/getmydoctorsbyid  patientid true))
 
 
-  (GET "/patient/getquickdoctorsbyid" [ patientid distance] (patient/getquickdoctorsbyid  patientid distance))
+  (GET "/patient/getquickdoctorsbyid" [ patientid distance lon lat]
+    (patient/getquickdoctorsbyid  patientid distance lon lat))
 
   (POST "/patient/sendmyDoctorToPatient"[patientid doctorid frompatientid] (doctor/sendmypatientToDoctor
                                                                            patientid doctorid frompatientid
