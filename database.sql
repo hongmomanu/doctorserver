@@ -305,6 +305,16 @@ db.money.insert(
  }
 )
 
+--急救申请医生
+db.applydoctors.insert(
+{
+   patientid:"551dfe4dcb4b40507ebc3ba7",
+   doctorid:"551b4e1d31ad8b836c655377",
+   isaccept:""
+}
+
+)
+
 
 
 
