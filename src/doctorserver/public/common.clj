@@ -19,4 +19,8 @@
   (some #{key} col))
 
 
+(def applymoney 5)
+(def applyquicktime -30)
+
+
 

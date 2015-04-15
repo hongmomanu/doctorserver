@@ -172,13 +172,17 @@
 (defn create-applydoctors [cond modified]
   (mc/update db  "applydoctors" cond {$set modified} {:upsert true})
   )
+(defn update-applydoctors [cond modified]
+  (mc/update db  "applydoctors" cond {$set modified} )
+  )
 
 (defn get-applyingquick [cond]
   (mc/find-one-as-map db "applydoctors" cond)
   )
 
-
-
+(defn get-applyingquick-list [cond]
+  (mc/find-maps db "applydoctors" cond)
+  )
 
 (defn get-custompush  [cond]
   (mc/find-one-as-map

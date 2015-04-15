@@ -23,6 +23,7 @@
                                                         (swap! channel-hub assoc channel content )
                                                         (swap! channel-hub-key assoc content channel )
                                                         (doctor/getnoread content 1 channel-hub-key)
+                                                        (doctor/getquickapplying content channel-hub-key)
                                                         )
                                 (= "patientconnect" type)(
                                                            do

@@ -1,10 +1,11 @@
 (ns doctorserver.controller.doctor
   (:use compojure.core  org.httpkit.server)
   (:require [doctorserver.db.core :as db]
-            ;;[doctorserver.public.common :as common]
+            [doctorserver.public.common :as commonfunc]
             [noir.response :as resp]
             [clojure.data.json :as json]
             [clj-time.local :as l]
+            [clj-time.core :as t]
             [monger.joda-time]
             )
 
@@ -56,6 +57,40 @@
     (if (= 1 readtype) (db/update-recommend   {:doctorid id} {:isreadbydoctor true})
       (db/update-recommend   {:patientid id} {:isreadbypatient true}))
     )
+
+  )
+
+(defn getquickapplying [doctorid channel-hub-key]
+  (let [
+         oldtime (t/plus (l/local-now) (t/minutes commonfunc/applyquicktime) )
+         applynoread (db/get-applyingquick-list {:doctorid doctorid
+                                          :applytime
+                                          { "$gte" oldtime }
+                                          :isread false })
+
+         filterapply (filter (fn [x]
+                               (nil? (db/get-applyingquick {:patientid (:patientid x)
+                                                            :applytime
+                                                            { "$gte" oldtime }
+                                                            :isaccept true }) ))
+                       applynoread)
+
+         channel (get @channel-hub-key doctorid)
+
+         ]
+
+
+
+    (dorun (map #(do
+             (send! channel (json/write-str {:type "patientquickapply"
+                                            :data (conj % {:userinfo (db/get-patient-byid (ObjectId. (:patientid %)))})} ) false)
+                   (db/update-applydoctors {:_id (:_id %)} {:isread true})
+            )
+      filterapply))
+
+
+    )
+
 
   )
 

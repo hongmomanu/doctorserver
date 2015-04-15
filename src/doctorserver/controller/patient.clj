@@ -16,8 +16,6 @@
               )
   )
 
-(def applymoney 5)
-(def applyquicktime -30)
 
 (defn patient-process [docwithpatient]
   (map #(conj {:patientinfo (db/get-patient-byid (ObjectId. (:patientid %)))}
@@ -83,10 +81,10 @@
            totalmoney (:totalmoney money)
            ]
 
-      (if(and money (>= totalmoney applymoney))(do
-                                                  (db/update-money-byid {:userid patientid} {:totalmoney (- totalmoney applymoney)}
+      (if(and money (>= totalmoney commonfunc/applymoney))(do
+                                                  (db/update-money-byid {:userid patientid} {:totalmoney (- totalmoney commonfunc/applymoney)}
                                                     )
-                                                 (db/update-money-byid {:userid doctorid} {:totalmoney (+ totalmoney applymoney)}
+                                                 (db/update-money-byid {:userid doctorid} {:totalmoney (+ totalmoney commonfunc/applymoney)}
                                                     )
                                                  (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid} {:ispay true})
 
@@ -143,8 +141,8 @@
 
   (try
     (do
-      (makemoneybyuserid userid (str "" applymoney) false)
-      (makemoneybyuserid doctorid (str "-" applymoney) false)
+      (makemoneybyuserid userid (str "" commonfunc/applymoney) false)
+      (makemoneybyuserid doctorid (str "-" commonfunc/applymoney) false)
       (db/make-apply-by-pid-dic {:applyid userid :doctorid doctorid} {:ispay false})
       (resp/json {:success true})
         )
@@ -231,11 +229,16 @@
 
 
   (let [
-         oldtime (t/plus (l/local-now) (t/minutes applyquicktime) )
-         applyingquick (db/get-applyingquick {:patientid patientid
-                                                 :applytime
-                                                 { "$gte" oldtime }
-                                                 :isread false })
+         oldtime (t/plus (l/local-now) (t/minutes commonfunc/applyquicktime) )
+         applytrue (db/get-applyingquick {:patientid patientid
+                                          :applytime
+                                          { "$gte" oldtime }
+                                          :isaccept true })
+
+         applyingquick (if(nil? applytrue)(db/get-applyingquick {:patientid patientid
+                                                                 :applytime
+                                                                 { "$gte" oldtime }
+                                                                 :isread false }) nil)
           channel (get @channel-hub-key patientid)
          ]
 
