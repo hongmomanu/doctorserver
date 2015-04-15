@@ -45,7 +45,7 @@
   (POST "/patient/continuewithapply" [userid  doctorid]
     (patient/continuewithapply userid  doctorid))
 
-
-
+  (POST "/patient/applyforquickdoctorswhocanhelp" [patientid  doctorids]
+    (patient/applyforquickdoctorswhocanhelp patientid  doctorids websocket/channel-hub-key))
 
  )

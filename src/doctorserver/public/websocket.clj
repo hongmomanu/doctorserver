@@ -3,6 +3,7 @@
   (:require
             [clojure.data.json :as json]
             [doctorserver.controller.doctor :as doctor]
+            [doctorserver.controller.patient :as patient]
             )
 )
 
@@ -29,6 +30,7 @@
                                                            (swap! channel-hub-key assoc content channel )
                                                            (println content)
                                                            (doctor/getnoread content 0 channel-hub-key)
+                                                           (patient/getquickapplying content channel-hub-key)
 
                                                            )
 

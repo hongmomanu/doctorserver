@@ -9,6 +9,7 @@
             [monger.joda-time]
             [doctorserver.public.common :as commonfunc]
             [monger.operators :refer :all]
+            [clj-time.core :as t]
             )
 
     (:import [org.bson.types ObjectId]
@@ -16,6 +17,7 @@
   )
 
 (def applymoney 5)
+(def applyquicktime -30)
 
 (defn patient-process [docwithpatient]
   (map #(conj {:patientinfo (db/get-patient-byid (ObjectId. (:patientid %)))}
@@ -199,6 +201,67 @@
 
     (resp/json alldoctors)
     )
+
+  )
+(defn applyforsingledoctor [patientid doctorid channel-hub-key]
+
+  (db/create-applydoctors {:patientid patientid :doctorid doctorid}
+    {:isaccept false :isread false :applytime (l/local-now) :patientid patientid :doctorid doctorid})
+
+  (let [
+         user  (db/get-patient-byid  (ObjectId. patientid))
+         channel (get @channel-hub-key doctorid)
+         ]
+    (when-not (nil? channel)
+
+      (send! channel (json/write-str {:type "patientquickapply" :data [{:userinfo  user}]}) false)
+
+      (db/create-applydoctors  {:patientid patientid :doctorid doctorid} {:isaccept false :isread true})
+
+      )
+
+    )
+
+
+
+
+  )
+(defn getquickapplying [patientid channel-hub-key]
+
+
+
+  (let [
+         oldtime (t/plus (l/local-now) (t/minutes applyquicktime) )
+         applyingquick (db/get-applyingquick {:patientid patientid
+                                                 :applytime
+                                                 { "$gte" oldtime }
+                                                 :isread false })
+          channel (get @channel-hub-key patientid)
+         ]
+
+    (println applyingquick)
+
+    (when-not (nil? applyingquick)
+      (send! channel (json/write-str {:type "quickapplying" :data applyingquick} ) false)
+      )
+    )
+  )
+(defn applyforquickdoctorswhocanhelp [patientid doctorids channel-hub-key]
+
+  (try
+    (do
+      (dorun (map #(applyforsingledoctor patientid % channel-hub-key) doctorids))
+
+      (resp/json {:success true})
+      )
+
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      )
+    )
+  (resp/json {:success true})
+
 
   )
 
