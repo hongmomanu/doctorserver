@@ -324,7 +324,7 @@
            patient (db/get-patient-byusername username)
 
            ]
-      (if (nil? patient) (resp/json{:success true :message (db/make-new-patient
+      (if (nil? patient) (resp/json {:success true :message (db/make-new-patient
                            {:username username
                             :realname realname
                             :password password

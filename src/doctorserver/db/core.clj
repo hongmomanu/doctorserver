@@ -122,6 +122,14 @@
     )
   )
 
+(defn get-enumerate-by-type [type]
+
+  (mc/find-maps
+    db "enumerate" {:enumeratetype type}
+    )
+
+  )
+
 
 (defn get-doctor-byid [oid]
   (mc/find-map-by-id db "doctors" oid)
