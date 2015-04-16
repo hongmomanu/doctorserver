@@ -32,6 +32,7 @@
                                                            (println content)
                                                            (doctor/getnoread content 0 channel-hub-key)
                                                            (patient/getquickapplying content channel-hub-key)
+                                                           (patient/getquickaccept content channel-hub-key)
 
                                                            )
 

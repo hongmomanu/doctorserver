@@ -79,6 +79,10 @@
 
            money (db/get-money-byid patientid)
            totalmoney (:totalmoney money)
+
+           totalmoney (if (nil? totalmoney) 0 totalmoney)
+
+
            ]
 
       (if(and money (>= totalmoney commonfunc/applymoney))(do
@@ -101,6 +105,23 @@
 
   )
 
+(defn getmoneybyid [userid]
+
+  (try
+    (let [
+           money (db/get-money-byid userid)
+           money (if (nil? money) 0 (:totalmoney money))
+           ]
+
+      (resp/json {:success true :money money})
+      )
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      )
+    )
+
+  )
 
 (defn makemoneybyuserid [userid addmoney isreturn]
 
@@ -108,11 +129,14 @@
     (let [
            money (db/get-money-byid userid)
            totalmoney (:totalmoney money)
+           totalmoney (if (nil? totalmoney) 0 totalmoney)
            addmoney (read-string addmoney)
            ]
 
       (db/update-money-byid {:userid userid} {:totalmoney (+ totalmoney addmoney)})
-      (when isreturn (resp/json {:success true}))
+
+      (when isreturn (resp/json {:success true :message  (+ totalmoney addmoney)}))
+
       )
     (catch Exception ex
       (println (.getMessage ex))
@@ -249,6 +273,31 @@
       )
     )
   )
+
+(defn getquickaccept [patientid channel-hub-key]
+  (let [
+         oldtime (t/plus (l/local-now) (t/minutes commonfunc/applyquicktime) )
+         applyaccepted (db/get-apply-by-pid {:applyid patientid
+                                          :applytime
+                                          { "$gte" oldtime }
+                                          :ispay true })
+
+
+         channel (get @channel-hub-key patientid)
+         ]
+
+
+    (dorun (map #(
+
+                   (send! channel (json/write-str {:type "quickaccept" :data (db/get-doctor-byid (ObjectId. (:doctorid %)))} ) false)
+
+                   ) applyaccepted))
+
+
+    )
+
+
+  )
 (defn applyforquickdoctorswhocanhelp [patientid doctorids channel-hub-key]
 
   (try
@@ -263,8 +312,32 @@
       (resp/json {:success false :message (.getMessage ex)})
       )
     )
-  (resp/json {:success true})
+  ;(resp/json {:success true})
 
+
+  )
+
+(defn newpatient [username realname password]
+
+  (try
+    (let [
+           patient (db/get-patient-byusername username)
+
+           ]
+      (if (nil? patient) (resp/json{:success true :message (db/make-new-patient
+                           {:username username
+                            :realname realname
+                            :password password
+                            })}) (resp/json {:success true :message "用户已存在"}))
+
+      )
+
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      )
+
+    )
 
   )
 

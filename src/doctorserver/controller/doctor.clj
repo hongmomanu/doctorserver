@@ -94,6 +94,51 @@
 
   )
 
+(defn acceptquickapply [rid patientid doctorid  channel-hub-key]
+
+  (try
+    (let [
+
+           oldtime (t/plus (l/local-now) (t/minutes commonfunc/applyquicktime) )
+
+           applytrue (db/get-applyingquick {:patientid patientid
+                                            :applytime
+                                            { "$gte" oldtime }
+                                            :isaccept true })
+           channel (get @channel-hub-key patientid)
+           ]
+      (if (nil? applytrue)
+        (let [
+               money (db/get-money-byid doctorid)
+               totalmoney (:totalmoney money)
+               totalmoney (if (nil? totalmoney) 0 totalmoney)
+               ]
+          (db/update-applydoctors {:_id (ObjectId. rid)} {:isaccept true} )
+
+          (db/update-money-byid {:userid doctorid} {:totalmoney (+ totalmoney commonfunc/applymoney)})
+
+          (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid}
+            {:applyid patientid :doctorid doctorid :applytime (l/local-now) :ispay true})
+
+          (when-not (nil? channel)
+            (send! channel (json/write-str {:type "quickaccept" :data (db/get-doctor-byid (ObjectId. doctorid))} ) false)
+            )
+          (resp/json {:success true})
+          )
+        (resp/json {:success false :msg "已被其他医生抢救了"})
+        )
+
+
+      )
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      )
+    )
+
+
+  )
+
 
 
 

@@ -20,6 +20,7 @@
 
 
 (def applymoney 5)
+(def quickapplymoney 10)
 (def applyquicktime -30)
 
 

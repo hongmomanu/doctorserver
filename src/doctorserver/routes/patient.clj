@@ -20,6 +20,8 @@
   (GET "/patient/getquickdoctorsbyid" [ patientid distance lon lat]
     (patient/getquickdoctorsbyid  patientid distance lon lat))
 
+
+
   (POST "/patient/sendmyDoctorToPatient"[patientid doctorid frompatientid] (doctor/sendmypatientToDoctor
                                                                            patientid doctorid frompatientid
                                                                            0
@@ -47,5 +49,17 @@
 
   (POST "/patient/applyforquickdoctorswhocanhelp" [patientid  doctorids]
     (patient/applyforquickdoctorswhocanhelp patientid  doctorids websocket/channel-hub-key))
+
+  (POST "/patient/getmoneybyid" [userid]
+
+    (patient/getmoneybyid userid)
+
+    )
+
+  (POST "/patient/newpatient" [username realname password]
+
+    (patient/newpatient username realname password)
+
+    )
 
  )

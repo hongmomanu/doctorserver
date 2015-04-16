@@ -310,7 +310,9 @@ db.applydoctors.insert(
 {
    patientid:"551dfe4dcb4b40507ebc3ba7",
    doctorid:"551b4e1d31ad8b836c655377",
-   isaccept:""
+   isaccept:false,
+   applytime:new Date(),
+   isread:false
 }
 
 )

@@ -84,7 +84,9 @@
          db "patients" {:username username}
      )
 )
-
+(defn make-new-patient [patient]
+  (mc/insert-and-return db "patients" patient)
+  )
 (defn get-doctors-byid [ids]
   (mc/find-maps
     db "doctors" {:_id {$in ids}}
@@ -196,6 +198,14 @@
     db "applyquick" cond
     )
   )
+
+(defn get-apply-by-pid [cond]
+
+  (mc/find-maps
+    db "applyquick" cond
+    )
+  )
+
 (defn make-apply-by-pid-dic [cond modified]
 
   (mc/update db "applyquick" cond {$set modified} {:upsert true})
