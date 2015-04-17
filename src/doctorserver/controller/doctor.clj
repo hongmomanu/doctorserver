@@ -336,4 +336,10 @@
 
   )
 
+(defn newdoctor [req]
+  (println (:form-params req))
+  (resp/json {:success true :message "等待审核"})
+
+  )
+
 

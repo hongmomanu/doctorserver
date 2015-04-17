@@ -31,4 +31,10 @@
 
   (GET "/doctor/sendmsgtopatient" [doctorid patientid message] (doctor/sendmsgtopatient doctorid patientid message))
 
+  (POST "/doctor/newdoctor" req
+
+    (doctor/newdoctor req)
+
+    )
+
  )

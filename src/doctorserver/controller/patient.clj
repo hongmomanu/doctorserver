@@ -78,9 +78,18 @@
                      {:applyid patientid :doctorid doctorid :applytime (l/local-now)})
 
            money (db/get-money-byid patientid)
+           money-doctor (db/get-money-byid doctorid)
+
+
+
            totalmoney (:totalmoney money)
 
+           totalmoney-doctor (:totalmoney money-doctor)
+
            totalmoney (if (nil? totalmoney) 0 totalmoney)
+
+
+           totalmoney-doctor (if (nil? totalmoney-doctor) 0 totalmoney-doctor)
 
 
            ]
@@ -88,7 +97,7 @@
       (if(and money (>= totalmoney commonfunc/applymoney))(do
                                                   (db/update-money-byid {:userid patientid} {:totalmoney (- totalmoney commonfunc/applymoney)}
                                                     )
-                                                 (db/update-money-byid {:userid doctorid} {:totalmoney (+ totalmoney commonfunc/applymoney)}
+                                                 (db/update-money-byid {:userid doctorid} {:totalmoney (+ totalmoney-doctor commonfunc/applymoney)}
                                                     )
                                                  (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid} {:ispay true})
 
@@ -236,7 +245,7 @@
          ]
     (when-not (nil? channel)
 
-      (send! channel (json/write-str {:type "patientquickapply" :data [{:userinfo  user}]}) false)
+      (send! channel (json/write-str {:type "patientquickapply" :data {:userinfo  user}}) false)
 
       (db/create-applydoctors  {:patientid patientid :doctorid doctorid} {:isaccept false :isread true})
 
