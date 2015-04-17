@@ -57,8 +57,16 @@
         doctor (db/get-doctor-byusername username)
         userinfo (:userinfo doctor)
     ]
-    (if (and doctor (= password (:password userinfo)))(json/write-str {:success true :user doctor})
-    (json/write-str {:success false}))
+      (if (and doctor (= password (:password userinfo)))
+
+        (if (:isconfirmed doctor) (json/write-str {:success true :user doctor})
+          (json/write-str {:success false :message "账户未审核"})
+          )
+
+        (json/write-str {:success false :message "用户名密码错误"})
+
+        )
+
     )
 )
 (defn patientlogin [username password]
