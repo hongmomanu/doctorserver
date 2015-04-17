@@ -37,9 +37,11 @@
 (defn getcustompush [doctorid]
 
   (try
+
     (do
       (resp/json {:success true :data (db/get-custompush  {:doctorid doctorid} )})
       )
+
     (catch Exception ex
       (println  (.getMessage ex))
       (resp/json {:success false :message (.getMessage ex)})
