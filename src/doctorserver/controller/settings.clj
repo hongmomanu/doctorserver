@@ -47,8 +47,6 @@
       (resp/json {:success false :message (.getMessage ex)})
       ))
 
-
-
   )
 
 (defn getblaclistbyid [doctorid]
