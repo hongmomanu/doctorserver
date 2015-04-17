@@ -338,7 +338,24 @@
 
 (defn newdoctor [req]
   (println (:form-params req))
-  (resp/json {:success true :message "等待审核"})
+  (try
+    (let [
+           formdata (:form-params req)
+           doctor (db/get-doctor-byusername username)
+           user  (conj {:userinfo (:form-params req)} {:isconfirmed false})
+           ]
+
+      (resp/json {:success true :message "等待审核" :data (db/make-new-doctor user)})
+      )
+
+    (catch Exception ex
+      (println (.getMessage ex))
+      {:success false :message (.getMessage ex)}
+      )
+
+    )
+
+
 
   )
 

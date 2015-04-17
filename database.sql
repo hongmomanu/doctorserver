@@ -179,6 +179,7 @@ db.doctors.insert(
 	          sectionname:"内科"
 
 	      },
+	      isconfirmed:true,
 	      logintime:new Date()
    	}
 )

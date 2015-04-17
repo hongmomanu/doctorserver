@@ -47,6 +47,11 @@
      )
 
 )
+
+(defn make-new-doctor [patient]
+  (mc/insert-and-return db "doctors" patient)
+  )
+
 (defn get-doctors-by-cond [cond]
 
   (mc/find-maps
