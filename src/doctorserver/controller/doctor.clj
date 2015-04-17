@@ -341,7 +341,7 @@
   (try
     (let [
            formdata (:form-params req)
-           doctor (db/get-doctor-byusername username)
+           doctor (db/get-doctor-byusername (:username formdata))
            user  (conj {:userinfo (:form-params req)} {:isconfirmed false})
            ]
 
