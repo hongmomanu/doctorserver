@@ -37,4 +37,12 @@
 
     )
 
+  (POST "/doctor/updatedoctorlocation" [lon lat doctorid]
+
+    (doctor/updatedoctorlocation lon lat doctorid)
+
+    )
+
+
+
  )

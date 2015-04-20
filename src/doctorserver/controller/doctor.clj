@@ -60,6 +60,21 @@
 
   )
 
+(defn updatedoctorlocation [lon lat doctorid]
+
+  (try
+    (do
+      (db/update-doctor {:_id (ObjectId. doctorid)} {:loc.coordinates
+                                                     [ (read-string lon)
+                                                       (read-string lat) ] })
+      (resp/json {:success true })
+      )
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      ))
+
+  )
 (defn getquickapplying [doctorid channel-hub-key]
   (let [
          oldtime (t/plus (l/local-now) (t/minutes commonfunc/applyquicktime) )

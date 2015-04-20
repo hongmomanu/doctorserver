@@ -48,6 +48,10 @@
 
 )
 
+(defn update-doctor [cond modified]
+  (mc/update db "doctors" cond {$set modified} )
+  )
+
 (defn make-new-doctor [patient]
   (mc/insert-and-return db "doctors" patient)
   )
