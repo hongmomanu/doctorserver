@@ -25,7 +25,7 @@
 
   (GET "/about" [] (about-page))
 
-  (POST "/common/uploadfile"  [file fileName]
+  (POST "/common/uploadfile"  [file ]
 
 
     (println "file up loaddd")
@@ -38,6 +38,7 @@
           timenow (c/to-long  (l/local-now))
           filename (str timenow (:filename file))
           ]
+      (println filename)
       (nio/upload-file uploadpath  (conj file {:filename filename}))
       (nresp/json {:success true :filename (:filename file)})
       )
