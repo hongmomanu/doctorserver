@@ -305,7 +305,7 @@
              (let [
                  newmessage (db/create-message message)
                  messagid (:_id newmessage)
-                 user (if (= fromtype 1) (db/get-doctor-byid  (ObjectId. from)) (db/get-patient-byid  (ObjectId. from)))
+                 user (if (= fromtype 1) (:userinfo (db/get-doctor-byid  (ObjectId. from))) (db/get-patient-byid  (ObjectId. from)))
                  channel (get @channel-hub-key to)
                  channelfrom (get @channel-hub-key from)
              ]
