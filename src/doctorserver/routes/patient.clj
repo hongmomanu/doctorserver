@@ -62,4 +62,10 @@
 
     )
 
+  (POST "/patient/adddoctorbyid" [patientid doctorid]
+
+    (patient/adddoctorbyid patientid doctorid websocket/channel-hub-key)
+
+    )
+
  )

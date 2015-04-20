@@ -351,3 +351,43 @@
   )
 
 
+(defn adddoctorbyid [patientid doctorid channel-hub-key]
+
+  (try
+    (let [
+           rels (db/get-relation-patient {:doctorid doctorid :patientid patientid})
+
+
+           channel (get @channel-hub-key doctorid)
+
+           ]
+
+      (if (> (count rels) 0) (resp/json {:success false :message  "关系已经存在"} ) (
+
+                                                             (do
+
+                                                               (db/makedoctorsvspatients {:doctorid doctorid :patientid patientid} {:doctorid doctorid :patientid patientid})
+
+                                                               (future (send! channel (json/write-str {:type "scanadd" :data (db/get-patient-byid (ObjectId. patientid))} ) false))
+
+                                                               (resp/json {:success true})
+
+                                                               )
+
+                                                             ))
+
+
+
+
+      )
+
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      )
+
+    )
+
+  )
+
+
