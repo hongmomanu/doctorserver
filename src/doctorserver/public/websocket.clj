@@ -15,6 +15,10 @@
     ;; Store the channel somewhere, and use it to sent response to client when interesting event happened
     ;;(swap! channel-hub assoc channel nil)
     (on-receive channel (fn [data]
+                          (println data)
+                          (println (json/read-str data))
+                          (println "0000000000000000000")
+
                             (let [cdata  (json/read-str data)
                                   type    (get cdata "type")
                                   content (get cdata "content")
@@ -66,7 +70,7 @@
 
 
 (defn start-server [port]
-  (run-server handler {:port port})
+  (run-server handler {:port port :max-body 16388608 :max-line 16388608})
   )
 
 

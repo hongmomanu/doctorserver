@@ -60,6 +60,21 @@
 
   )
 
+(defn updatedoctorlocation [lon lat doctorid]
+
+  (try
+    (do
+      (db/update-doctor {:_id (ObjectId. doctorid)} {:loc.coordinates
+                                                     [ (read-string lon)
+                                                       (read-string lat) ] })
+      (resp/json {:success true })
+      )
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      ))
+
+  )
 (defn getquickapplying [doctorid channel-hub-key]
   (let [
          oldtime (t/plus (l/local-now) (t/minutes commonfunc/applyquicktime) )
@@ -197,6 +212,12 @@
 
 
   )
+
+(defn getmypatient [doctorid]
+  (resp/json (db/get-relation-patient {:doctorid doctorid}))
+  )
+
+
 ;;doctor recommend
 (defn sendmypatientToDoctor [patientid doctorid fromdoctorid rectype channel-hub-key ]
 
@@ -287,6 +308,8 @@
 
 ;; chat process func begin here
 (defn chatprocess [data  channel-hub-key]
+  (println "22222222222222222222222222222222")
+  (println data)
 ;;{type chatdoctor, from 551b4cb83b83719a9aba9c01, to 551b4e1d31ad8b836c655377, content 1212}
     (let [ type (get data "type")
            from (get data "from")
