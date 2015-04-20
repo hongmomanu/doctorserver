@@ -25,9 +25,12 @@
 
   (GET "/about" [] (about-page))
 
-  (POST "/common/uploadfile"  [file]
+  (POST "/common/uploadfile"  [file fileName]
+
 
     (println "file up loaddd")
+
+    (println file)
 
     (let [
            datapath (str (System/getProperty "user.dir") "/")
