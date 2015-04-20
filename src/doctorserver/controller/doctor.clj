@@ -212,6 +212,12 @@
 
 
   )
+
+(defn getmypatient [doctorid]
+  (resp/json (db/get-relation-patient {:doctorid doctorid}))
+  )
+
+
 ;;doctor recommend
 (defn sendmypatientToDoctor [patientid doctorid fromdoctorid rectype channel-hub-key ]
 
