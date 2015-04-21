@@ -18,7 +18,7 @@
 (defn lazy-contains? [col key]
   (some #{key} col))
 
-
+(def datapath (str (System/getProperty "user.dir") "/"))
 (def applymoney 5)
 (def quickapplymoney 10)
 (def applyquicktime -30)
