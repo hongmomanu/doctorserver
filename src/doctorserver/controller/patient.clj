@@ -75,7 +75,7 @@
   (try
     (let [
            myapply (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid}
-                     {:applyid patientid :doctorid doctorid :applytime (l/local-now)})
+                     {:applyid patientid :isreply false :doctorid doctorid :applytime (l/local-now)})
 
            money (db/get-money-byid patientid)
            money-doctor (db/get-money-byid doctorid)
@@ -177,6 +177,23 @@
       (makemoneybyuserid userid (str "" commonfunc/applymoney) false)
       (makemoneybyuserid doctorid (str "-" commonfunc/applymoney) false)
       (db/make-apply-by-pid-dic {:applyid userid :doctorid doctorid} {:ispay false})
+      (resp/json {:success true})
+        )
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      )
+    )
+
+  )
+
+(defn backmoneybydoctorwithapply [patientid  doctorid]
+
+  (try
+    (do
+      (makemoneybyuserid userid (str "" commonfunc/applymoney) false)
+      (makemoneybyuserid doctorid (str "-" commonfunc/applymoney) false)
+      (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid} {:isreply true})
       (resp/json {:success true})
         )
     (catch Exception ex
@@ -305,6 +322,25 @@
 
     )
 
+
+  )
+(defn ispatientinapplybydoctorid [patientid doctorid channel-hub-key]
+
+  (let [
+         oldtime (t/plus (l/local-now) (t/minutes commonfunc/applyquicktime) )
+
+         applyaccepted (db/get-apply-by-pid-dic {:applyid patientid
+                                             :doctorid doctorid
+                                             :applytime
+                                             { "$gte" oldtime }
+                                              :isreply false
+                                             :ispay true })
+
+         ]
+    (if (nil? applyaccepted) (resp/json {:success false :msg "用户未申请或已退款"})
+      (resp/json {:success true}))
+
+  )
 
   )
 (defn applyforquickdoctorswhocanhelp [patientid doctorids channel-hub-key]

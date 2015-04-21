@@ -31,16 +31,16 @@
 
   (GET "/files/:filename" [filename]
 
-    (file-response (str schema/commonfunc "upload/" filename))
+    (file-response (str commonfunc/datapath "upload/" filename))
 
     )
 
   (POST "/common/uploadfile"  [file ]
 
 
-    ;(println "file up loaddd")
+    (println "file up loaddd")
 
-    ;(println file)
+    (println file)
 
     (let [
           uploadpath  (str commonfunc/datapath "upload/")
@@ -49,7 +49,7 @@
           ]
       ;(println filename)
       (nio/upload-file uploadpath  (conj file {:filename filename}))
-      (nresp/json {:success true :filename (:filename file)})
+      (nresp/json {:success true :filename filename})
       )
 
     )

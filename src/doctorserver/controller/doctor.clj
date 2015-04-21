@@ -317,9 +317,10 @@
            content (get data "content")
            fromtype (get data "fromtype")
            imgid (get data "imgid")
+
            message {:content content :fromid from :toid to
                     :msgtime (l/local-now) :isread false
-                    :fromtype fromtype
+                    :fromtype fromtype :type type
                     }
         ]
      (try

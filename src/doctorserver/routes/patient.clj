@@ -68,4 +68,16 @@
 
     )
 
+  (POST "/patient/ispatientinapplybydoctorid" [patientid doctorid]
+
+    (patient/ispatientinapplybydoctorid patientid doctorid websocket/channel-hub-key)
+
+    )
+  (POST "/patient/backmoneybydoctorwithapply" [patientid doctorid]
+
+    (patient/backmoneybydoctorwithapply patientid doctorid )
+
+    )
+
+
  )
