@@ -234,6 +234,7 @@ db.doctorsvspatients.insert(
 db.doctorsvsdoctors.insert(
   {
         doctorid:"551b4cb83b83719a9aba9c01",
+        rtime:new Date(),
         rid:"551b4e1d31ad8b836c655377"
   }
 )

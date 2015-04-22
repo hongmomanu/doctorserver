@@ -43,6 +43,13 @@
     (doctor/updatedoctorlocation lon lat doctorid)
 
     )
+
+  (POST "/doctor/adddoctorbyid" [from to ]
+
+    (doctor/adddoctorbyid from to websocket/channel-hub-key)
+
+    )
+
  (POST "/doctor/getmypatient" [doctorid]
 
     (doctor/getmypatient  doctorid)

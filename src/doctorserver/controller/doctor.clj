@@ -6,6 +6,7 @@
             [clojure.data.json :as json]
             [clj-time.local :as l]
             [clj-time.core :as t]
+            [monger.operators :refer :all]
             [monger.joda-time]
             )
 
@@ -318,8 +319,6 @@
 
 ;; chat process func begin here
 (defn chatprocess [data  channel-hub-key]
-  (println "22222222222222222222222222222222")
-  (println data)
 ;;{type chatdoctor, from 551b4cb83b83719a9aba9c01, to 551b4e1d31ad8b836c655377, content 1212}
     (let [ type (get data "type")
            from (get data "from")
@@ -390,6 +389,44 @@
     )
 
 
+
+  )
+
+
+(defn adddoctorbyid [fromid toid channel-hub-key]
+
+  (try
+    (let [
+           rels (db/get-relation-doctor {$or [{:doctorid fromid :rid  toid} {:doctorid toid :rid fromid}]})
+
+
+           channel (get @channel-hub-key toid)
+
+           ]
+
+      (if (> (count rels) 0) (resp/json {:success false :message  "关系已经存在"} ) (
+
+                  (do
+
+                    (db/makedoctorsvsdoctors {:doctorid fromid :rid toid :rtime (l/local-now)} )
+
+                    (future (send! channel (json/write-str {:type "scanadd"  :data (conj {:fromtype 1} (db/get-doctor-byid (ObjectId. fromid)))} ) false))
+
+                    (resp/json {:success true})
+
+                    )
+
+                                                                                ))
+
+
+      )
+
+    (catch Exception ex
+      (println (.getMessage ex))
+      (resp/json {:success false :message (.getMessage ex)})
+      )
+
+    )
 
   )
 

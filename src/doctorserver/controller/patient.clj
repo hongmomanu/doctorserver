@@ -452,7 +452,7 @@
 
                                                                (db/makedoctorsvspatients {:doctorid doctorid :patientid patientid} {:doctorid doctorid :patientid patientid})
 
-                                                               (future (send! channel (json/write-str {:type "scanadd" :data (db/get-patient-byid (ObjectId. patientid))} ) false))
+                                                               (future (send! channel (json/write-str {:type "scanadd" :data (conj {:fromtype 0} (db/get-patient-byid (ObjectId. patientid)))} ) false))
 
                                                                (resp/json {:success true})
 
@@ -473,5 +473,8 @@
     )
 
   )
+
+
+
 
 

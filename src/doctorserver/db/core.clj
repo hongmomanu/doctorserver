@@ -157,6 +157,12 @@
 
   )
 
+(defn makedoctorsvsdoctors [data]
+
+  (mc/insert db "doctorsvsdoctors" data)
+
+  )
+
 (defn findrecommend [cond]
   (mc/find-one-as-map
     db "recommend" cond
