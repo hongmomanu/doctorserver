@@ -142,7 +142,7 @@
           (db/update-money-byid {:userid patientid} {:totalmoney (- ptotalmoney needmoney)})
 
           (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid}
-            {:applyid patientid :needmoney needmoney  :doctorid doctorid :applytime (l/local-now) :ispay true})
+            {:applyid patientid :needmoney needmoney :isreply false :doctorid doctorid :applytime (l/local-now) :ispay true})
 
           (when-not (nil? channel)
             (send! channel (json/write-str {:type "quickaccept" :data (db/get-doctor-byid (ObjectId. doctorid))} ) false)
