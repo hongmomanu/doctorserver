@@ -75,27 +75,20 @@
 
   (try
     (let [
-
-
            money (db/get-money-byid patientid)
            money-doctor (db/get-money-byid doctorid)
 
-           totalmoney (:totalmoney money)
-
-           totalmoney-doctor (:totalmoney money-doctor)
-
-           totalmoney (if (nil? totalmoney) 0 totalmoney)
-
-
-           totalmoney-doctor (if (nil? totalmoney-doctor) 0 totalmoney-doctor)
-
-
+           totalmoney (if (nil? money) 0 (:totalmoney money))
+           totalmoney-doctor (if (nil? money-doctor) 0 (:totalmoney money-doctor))
            ]
+      (println 12122)
+      (println (>= totalmoney commonfunc/applymoney))
 
-      (if(and money (>= totalmoney commonfunc/applymoney))(do
+      (if (>= totalmoney commonfunc/applymoney)(do
 
-                                                            (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid}
-                                                              {:applyid patientid :needmoney (commonfunc/applymoney) :isreply false :doctorid doctorid :applytime (l/local-now)})
+                                                 (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid}
+                                                              {:applyid patientid :needmoney commonfunc/applymoney :isreply false :doctorid doctorid :applytime (l/local-now)})
+
                                                             (db/update-money-byid {:userid patientid} {:totalmoney (- totalmoney commonfunc/applymoney)}
                                                     )
                                                  (db/update-money-byid {:userid doctorid} {:totalmoney (+ totalmoney-doctor commonfunc/applymoney)}
@@ -326,14 +319,33 @@
   (let [
          oldtime (t/plus (l/local-now) (t/minutes commonfunc/applyquicktime) )
          applyaccepted (db/get-apply-by-pid {:applyid patientid
-
-                                          ;:applytime
-                                          ;{ "$gte" oldtime }
+                                          :applytime
+                                          { "$gte" oldtime }
                                           :ispay true })
+
+         applynotsaying (db/get-apply-by-pid {:applyid patientid
+                                              :applytime
+                                              { "$lte" oldtime }
+                                              :ispay true })
+
+
+         applynotsaying (filter (fn [x]
+                                  (= (db/get-message-num
+                                       {:fromid (:doctorid x) :msgtime
+                                       { "$gte" (:applytime x)
+                                         "$lte" (l/local-now) }}
+                                       ) 0))
+                          applynotsaying)
+
+
+
+
+         applyaccepted (concat applyaccepted applynotsaying)
 
 
          channel (get @channel-hub-key patientid)
          ]
+
 
 
     (dorun (map #(
