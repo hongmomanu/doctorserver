@@ -8,6 +8,7 @@
             [clj-time.format :as f]
             [monger.joda-time]
             [doctorserver.public.common :as commonfunc]
+            [doctorserver.controller.doctor :as doctor]
             [monger.operators :refer :all]
             [clj-time.core :as t]
             )
@@ -198,7 +199,7 @@
 
   )
 
-(defn backmoneybydoctorwithapply [patientid  doctorid]
+(defn backmoneybydoctorwithapply [patientid  doctorid channel-hub-key]
 
   (let [
          addmoney (:addmoney (db/get-apply-by-pid-dic {:applyid patientid :doctorid doctorid}))
@@ -210,7 +211,7 @@
         (makemoneybyuserid patientid (str "" applymoney) false)
         (makemoneybyuserid doctorid (str "-" applymoney) false)
         (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid} {:isreply true})
-        (resp/json {:success true})
+        (doctor/sendmsgtopatient channel-hub-key doctorid patientid "此次诊断已退款")
         )
       (catch Exception ex
         (println (.getMessage ex))
