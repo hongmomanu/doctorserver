@@ -75,13 +75,10 @@
 
   (try
     (let [
-           myapply (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid}
-                     {:applyid patientid :addmoney 0 :isreply false :doctorid doctorid :applytime (l/local-now)})
+
 
            money (db/get-money-byid patientid)
            money-doctor (db/get-money-byid doctorid)
-
-
 
            totalmoney (:totalmoney money)
 
@@ -96,7 +93,10 @@
            ]
 
       (if(and money (>= totalmoney commonfunc/applymoney))(do
-                                                  (db/update-money-byid {:userid patientid} {:totalmoney (- totalmoney commonfunc/applymoney)}
+
+                                                            (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid}
+                                                              {:applyid patientid :needmoney (commonfunc/applymoney) :isreply false :doctorid doctorid :applytime (l/local-now)})
+                                                            (db/update-money-byid {:userid patientid} {:totalmoney (- totalmoney commonfunc/applymoney)}
                                                     )
                                                  (db/update-money-byid {:userid doctorid} {:totalmoney (+ totalmoney-doctor commonfunc/applymoney)}
                                                     )
@@ -174,8 +174,8 @@
 (defn backmoneybyuseridwithapply [userid  doctorid]
 
   (let [
-         addmoney (:addmoney (db/get-apply-by-pid-dic {:applyid userid :doctorid doctorid}))
-         applymoney (+ commonfunc/applymoney addmoney)
+         needmoney (:needmoney (db/get-apply-by-pid-dic {:applyid userid :doctorid doctorid}))
+         applymoney needmoney
 
          ]
 
@@ -202,8 +202,8 @@
 (defn backmoneybydoctorwithapply [patientid  doctorid channel-hub-key]
 
   (let [
-         addmoney (:addmoney (db/get-apply-by-pid-dic {:applyid patientid :doctorid doctorid}))
-         applymoney (+ commonfunc/applymoney addmoney)
+         needmoney (:needmoney (db/get-apply-by-pid-dic {:applyid patientid :doctorid doctorid}))
+         applymoney needmoney
          ]
 
     (try
@@ -272,18 +272,19 @@
     )
 
   )
-(defn applyforsingledoctor [patientid doctorid channel-hub-key]
+(defn applyforsingledoctor [patientid doctorid needmoney channel-hub-key]
 
   (db/create-applydoctors {:patientid patientid :doctorid doctorid}
-    {:isaccept false :isread false :applytime (l/local-now) :patientid patientid :doctorid doctorid})
+    {:isaccept false :needmoney needmoney :isread false :applytime (l/local-now) :patientid patientid :doctorid doctorid})
 
   (let [
          user  (db/get-patient-byid  (ObjectId. patientid))
          channel (get @channel-hub-key doctorid)
+         applydoctor (db/get-applyingquick {:patientid patientid :doctorid doctorid})
          ]
     (when-not (nil? channel)
 
-      (send! channel (json/write-str {:type "patientquickapply" :data {:userinfo  user}}) false)
+      (send! channel (json/write-str {:type "patientquickapply" :data (conj applydoctor {:userinfo  user})}) false)
 
       (db/create-applydoctors  {:patientid patientid :doctorid doctorid} {:isaccept false :isread true})
 
@@ -375,7 +376,7 @@
          ]
     (if (>= money needmoney) (try
                                (do
-                                 (dorun (map #(applyforsingledoctor patientid % channel-hub-key) doctorids))
+                                 (dorun (map #(applyforsingledoctor patientid % needmoney channel-hub-key) doctorids))
 
                                  (resp/json {:success true})
                                  )

@@ -110,7 +110,7 @@
 
   )
 
-(defn acceptquickapply [rid patientid doctorid  channel-hub-key]
+(defn acceptquickapply [rid patientid doctorid addmoney channel-hub-key]
 
   (try
     (let [
@@ -121,6 +121,9 @@
                                             :applytime
                                             { "$gte" oldtime }
                                             :isaccept true })
+
+           addmoney (read-string addmoney)
+
            channel (get @channel-hub-key patientid)
            ]
       (if (nil? applytrue)
@@ -128,13 +131,18 @@
                money (db/get-money-byid doctorid)
                totalmoney (:totalmoney money)
                totalmoney (if (nil? totalmoney) 0 totalmoney)
+               patientmoney (db/get-money-byid patientid)
+               ptotalmoney (:totalmoney patientmoney)
+               ptotalmoney (if (nil? ptotalmoney) 0 ptotalmoney)
+               needmoney (+ addmoney commonfunc/quickapplymoney)
                ]
           (db/update-applydoctors {:_id (ObjectId. rid)} {:isaccept true} )
 
-          (db/update-money-byid {:userid doctorid} {:totalmoney (+ totalmoney commonfunc/applymoney)})
+          (db/update-money-byid {:userid doctorid} {:totalmoney (+ totalmoney needmoney)})
+          (db/update-money-byid {:userid patientid} {:totalmoney (- ptotalmoney needmoney)})
 
           (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid}
-            {:applyid patientid :doctorid doctorid :applytime (l/local-now) :ispay true})
+            {:applyid patientid :needmoney needmoney  :doctorid doctorid :applytime (l/local-now) :ispay true})
 
           (when-not (nil? channel)
             (send! channel (json/write-str {:type "quickaccept" :data (db/get-doctor-byid (ObjectId. doctorid))} ) false)
