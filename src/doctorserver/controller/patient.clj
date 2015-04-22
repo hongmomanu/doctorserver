@@ -81,8 +81,6 @@
            totalmoney (if (nil? money) 0 (:totalmoney money))
            totalmoney-doctor (if (nil? money-doctor) 0 (:totalmoney money-doctor))
            ]
-      (println 12122)
-      (println (>= totalmoney commonfunc/applymoney))
 
       (if (>= totalmoney commonfunc/applymoney)(do
 
