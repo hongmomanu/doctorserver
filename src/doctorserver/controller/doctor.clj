@@ -206,12 +206,12 @@
        (db/makedoctorsvspatients {:doctorid doctorid :patientid patientid} {:doctorid doctorid :patientid patientid})
 
        (when-not (nil? channelp)
-         (send! channelp (json/write-str {:type "recommendconfirm" :data [info]} ) false)
+         (send! channelp (json/write-str {:type "recommendconfirm" :data info} ) false)
          ;(db/update-recommend  {:_id recommendid} {:isreadbypatient true} )
          )
 
        (when-not (nil? channeld)
-         (send! channeld (json/write-str {:type "recommendconfirm" :data [info]} ) false)
+         (send! channeld (json/write-str {:type "recommendconfirm" :data info} ) false)
          ;(db/update-recommend  {:_id recommendid} {:isreadbydoctor true} )
          )
 
