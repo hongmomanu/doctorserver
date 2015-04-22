@@ -369,7 +369,7 @@
   (let [
          money (db/get-money-byid patientid)
          money (if (nil? money) 0 (:totalmoney money))
-         needmoney (+ money (read-string addmoney))
+         needmoney (+ commonfunc/quickapplymoney (read-string addmoney))
          doctorids (json/read-str doctorids)
 
          ]
