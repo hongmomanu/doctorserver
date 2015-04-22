@@ -138,8 +138,8 @@
   (try
     (let [
            money (db/get-money-byid userid)
-           totalmoney (:totalmoney money)
-           totalmoney (if (nil? totalmoney) 0 totalmoney)
+           ;totalmoney (:totalmoney money)
+           totalmoney (if (or (nil? money) (:totalmoney money)) 0 (:totalmoney money))
            addmoney (read-string addmoney)
            ]
 
@@ -272,10 +272,10 @@
     )
 
   )
-(defn applyforsingledoctor [patientid doctorid needmoney channel-hub-key]
+(defn applyforsingledoctor [patientid doctorid addmoney channel-hub-key]
 
   (db/create-applydoctors {:patientid patientid :doctorid doctorid}
-    {:isaccept false :needmoney needmoney :isread false :applytime (l/local-now) :patientid patientid :doctorid doctorid})
+    {:isaccept false :addmoney addmoney :isread false :applytime (l/local-now) :patientid patientid :doctorid doctorid})
 
   (let [
          user  (db/get-patient-byid  (ObjectId. patientid))
@@ -376,7 +376,7 @@
          ]
     (if (>= money needmoney) (try
                                (do
-                                 (dorun (map #(applyforsingledoctor patientid % needmoney channel-hub-key) doctorids))
+                                 (dorun (map #(applyforsingledoctor patientid % (read-string addmoney) channel-hub-key) doctorids))
 
                                  (resp/json {:success true})
                                  )
