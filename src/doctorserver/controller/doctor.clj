@@ -48,6 +48,7 @@
          noreadmessage-patientinfo (map #(conj % {:patientinfo (db/get-patient-byid  (ObjectId. (:fromid %)))}) noreadmessage-patient)
          noreadrecommend-userinfo (map #(noreadrecommend-process %) noreadrecommend)
         ]
+    (println )
     (send! channel (json/write-str {:type "doctorchat" :data
     (concat noreadmessage-userinfo noreadmessage-patientinfo)} ) false)
 
@@ -277,7 +278,7 @@
 (defn sendmsgtopatient [channel-hub-key doctorid patientid message]
   (let [
          channel (get @channel-hub-key patientid)
-         message {:content message :fromid doctorid :toid patientid :msgtime (l/local-now) :isread false}
+         message {:content message :fromid doctorid :fromtype 1 :toid patientid :msgtime (l/local-now) :isread false}
          newmessage (db/create-message message)
          messagid (:_id newmessage)
          user (db/get-doctor-byid  (ObjectId. doctorid))
@@ -286,7 +287,7 @@
     (try
       (do
           (when-not (nil? channel)
-            (send! channel (json/write-str {:type "doctorpatientchat" :data [(conj message {:userinfo (:userinfo user)})]} ) false)
+            (send! channel (json/write-str {:type "doctorchat" :data [(conj message {:userinfo (:userinfo user)})]} ) false)
             (db/update-message  {:_id messagid} {:isread true} )
             )
         {:success true}

@@ -15,9 +15,7 @@
     ;; Store the channel somewhere, and use it to sent response to client when interesting event happened
     ;;(swap! channel-hub assoc channel nil)
     (on-receive channel (fn [data]
-                          (println data)
-                          (println (json/read-str data))
-                          (println "0000000000000000000")
+
 
                             (let [cdata  (json/read-str data)
                                   type    (get cdata "type")
@@ -33,7 +31,6 @@
                                                            do
                                                            (swap! channel-hub assoc channel content )
                                                            (swap! channel-hub-key assoc content channel )
-                                                           (println content)
                                                            (doctor/getnoread content 0 channel-hub-key)
                                                            (patient/getquickapplying content channel-hub-key)
                                                            (patient/getquickaccept content channel-hub-key)

@@ -326,8 +326,9 @@
   (let [
          oldtime (t/plus (l/local-now) (t/minutes commonfunc/applyquicktime) )
          applyaccepted (db/get-apply-by-pid {:applyid patientid
-                                          :applytime
-                                          { "$gte" oldtime }
+
+                                          ;:applytime
+                                          ;{ "$gte" oldtime }
                                           :ispay true })
 
 
