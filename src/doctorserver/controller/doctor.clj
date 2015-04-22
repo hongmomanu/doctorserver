@@ -48,7 +48,7 @@
          noreadmessage-patientinfo (map #(conj % {:patientinfo (db/get-patient-byid  (ObjectId. (:fromid %)))}) noreadmessage-patient)
          noreadrecommend-userinfo (map #(noreadrecommend-process %) noreadrecommend)
         ]
-    (println )
+    ;(println )
     (send! channel (json/write-str {:type "doctorchat" :data
     (concat noreadmessage-userinfo noreadmessage-patientinfo)} ) false)
 
