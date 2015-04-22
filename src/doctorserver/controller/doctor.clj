@@ -96,8 +96,7 @@
 
          ]
 
-    (println "applynoread")
-    (println applynoread)
+
 
     (dorun (map #(do
              (send! channel (json/write-str {:type "patientquickapply"
@@ -370,7 +369,7 @@
   )
 
 (defn newdoctor [req]
-  (println (:form-params req))
+
   (try
     (let [
            formdata (:form-params req)

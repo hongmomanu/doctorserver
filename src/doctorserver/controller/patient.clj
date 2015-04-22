@@ -345,7 +345,7 @@
          ]
 
 
-
+(println applyaccepted)
     (dorun (map #(
 
                    (send! channel (json/write-str {:type "quickaccept" :data (db/get-doctor-byid (ObjectId. (:doctorid %)))} ) false)
