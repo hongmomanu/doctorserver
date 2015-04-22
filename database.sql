@@ -295,7 +295,8 @@ db.applyquick.insert(
     applyid :"551dfe4dcb4b40507ebc3ba7",
     doctorid:"551b4e1d31ad8b836c655377",
     ispay:false,
-    isreply:false
+    isreply:false,
+    addmoney:0
 }
 )
 

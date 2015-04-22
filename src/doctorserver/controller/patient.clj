@@ -364,20 +364,35 @@
   )
 
   )
-(defn applyforquickdoctorswhocanhelp [patientid doctorids channel-hub-key]
+(defn applyforquickdoctorswhocanhelp [patientid doctorids addmoney channel-hub-key]
 
-  (try
-    (do
-      (dorun (map #(applyforsingledoctor patientid % channel-hub-key) doctorids))
+  (let [
+         money (db/get-money-byid patientid)
+         money (if (nil? money) 0 (:totalmoney money))
+         needmoney (+ money (read-string addmoney))
+         doctorids (json/read-str doctorids)
 
-      (resp/json {:success true})
+         ]
+    (if (>= money needmoney) (try
+                               (do
+                                 (dorun (map #(applyforsingledoctor patientid % channel-hub-key) doctorids))
+
+                                 (resp/json {:success true})
+                                 )
+
+                               (catch Exception ex
+                                 (println (.getMessage ex))
+                                 (resp/json {:success false :message (.getMessage ex)})
+                                 )
+                               )
+
+      (resp/json {:success false :message (str "余额" money "元,不足支付")})
+
       )
 
-    (catch Exception ex
-      (println (.getMessage ex))
-      (resp/json {:success false :message (.getMessage ex)})
-      )
     )
+
+
   ;(resp/json {:success true})
 
 

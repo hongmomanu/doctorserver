@@ -94,7 +94,8 @@
 
          ]
 
-
+    (println "applynoread")
+    (println applynoread)
 
     (dorun (map #(do
              (send! channel (json/write-str {:type "patientquickapply"
