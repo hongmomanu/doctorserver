@@ -75,7 +75,7 @@
   (try
     (let [
            myapply (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid}
-                     {:applyid patientid :isreply false :doctorid doctorid :applytime (l/local-now)})
+                     {:applyid patientid :addmoney 0 :isreply false :doctorid doctorid :applytime (l/local-now)})
 
            money (db/get-money-byid patientid)
            money-doctor (db/get-money-byid doctorid)
@@ -172,35 +172,55 @@
 
 (defn backmoneybyuseridwithapply [userid  doctorid]
 
-  (try
-    (do
-      (makemoneybyuserid userid (str "" commonfunc/applymoney) false)
-      (makemoneybyuserid doctorid (str "-" commonfunc/applymoney) false)
-      (db/make-apply-by-pid-dic {:applyid userid :doctorid doctorid} {:ispay false})
-      (resp/json {:success true})
+  (let [
+         addmoney (:addmoney (db/get-apply-by-pid-dic {:applyid userid :doctorid doctorid}))
+         applymoney (+ commonfunc/applymoney addmoney)
+
+         ]
+
+    (try
+      (do
+        (makemoneybyuserid userid (str "" applymoney) false)
+        (makemoneybyuserid doctorid (str "-" applymoney) false)
+        (db/make-apply-by-pid-dic {:applyid userid :doctorid doctorid} {:ispay false})
+        (resp/json {:success true})
         )
-    (catch Exception ex
-      (println (.getMessage ex))
-      (resp/json {:success false :message (.getMessage ex)})
+      (catch Exception ex
+        (println (.getMessage ex))
+        (resp/json {:success false :message (.getMessage ex)})
+        )
       )
+
+
     )
+
+
 
   )
 
 (defn backmoneybydoctorwithapply [patientid  doctorid]
 
-  (try
-    (do
-      (makemoneybyuserid userid (str "" commonfunc/applymoney) false)
-      (makemoneybyuserid doctorid (str "-" commonfunc/applymoney) false)
-      (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid} {:isreply true})
-      (resp/json {:success true})
+  (let [
+         addmoney (:addmoney (db/get-apply-by-pid-dic {:applyid patientid :doctorid doctorid}))
+         applymoney (+ commonfunc/applymoney addmoney)
+         ]
+
+    (try
+      (do
+        (makemoneybyuserid patientid (str "" applymoney) false)
+        (makemoneybyuserid doctorid (str "-" applymoney) false)
+        (db/make-apply-by-pid-dic {:applyid patientid :doctorid doctorid} {:isreply true})
+        (resp/json {:success true})
         )
-    (catch Exception ex
-      (println (.getMessage ex))
-      (resp/json {:success false :message (.getMessage ex)})
+      (catch Exception ex
+        (println (.getMessage ex))
+        (resp/json {:success false :message (.getMessage ex)})
+        )
       )
+
     )
+
+
 
   )
 
