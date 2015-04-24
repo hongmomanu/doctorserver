@@ -14,7 +14,7 @@
               )
   )
 
-(declare noreadrecommend-process sendrecommendconfirm)
+(declare noreadrecommend-process sendrecommendconfirm chatprocess)
 (defn noreadrecommend-process [noreadrecommend]
   (let [
          fromid (:fromid noreadrecommend)
@@ -46,7 +46,7 @@
          channel (get @channel-hub-key id)
         ;user (db/get-doctor-byid  (ObjectId. id))
         noreadmessage-userinfo (map #(conj % {:userinfo (:userinfo (db/get-doctor-byid  (ObjectId. (:fromid %))))}) noreadmessage)
-         noreadmessage-patientinfo (map #(conj % {:patientinfo (db/get-patient-byid  (ObjectId. (:fromid %)))}) noreadmessage-patient)
+         noreadmessage-patientinfo (map #(conj % {:userinfo (db/get-patient-byid  (ObjectId. (:fromid %)))}) noreadmessage-patient)
          noreadrecommend-userinfo (map #(noreadrecommend-process %) noreadrecommend)
         ]
     ;(println )
@@ -63,6 +63,8 @@
   )
 
 (defn updatedoctorlocation [lon lat doctorid]
+
+  (println lon lat doctorid)
 
   (try
     (do
@@ -205,12 +207,24 @@
 
        (db/makedoctorsvspatients {:doctorid doctorid :patientid patientid} {:doctorid doctorid :patientid patientid})
 
-       (when-not (nil? channelp)
+       (chatprocess {:type "doctorchat" :fromtype 0
+                     :from patientid :to doctorid
+                     :content "已添加您作为我的医生" :imgid -1} channel-hub-key)
+
+
+       (chatprocess {:type "doctorchat" :fromtype 1
+                     :from doctorid :to patientid
+                     :content "已添加您作为我的患者" :imgid -1} channel-hub-key)
+
+
+
+
+       #_(when-not (nil? channelp)
          (send! channelp (json/write-str {:type "recommendconfirm" :data info} ) false)
          ;(db/update-recommend  {:_id recommendid} {:isreadbypatient true} )
          )
 
-       (when-not (nil? channeld)
+       #_(when-not (nil? channeld)
          (send! channeld (json/write-str {:type "recommendconfirm" :data info} ) false)
          ;(db/update-recommend  {:_id recommendid} {:isreadbydoctor true} )
          )
@@ -319,7 +333,7 @@
 ;; chat process func begin here
 (defn chatprocess [data  channel-hub-key]
 ;;{type chatdoctor, from 551b4cb83b83719a9aba9c01, to 551b4e1d31ad8b836c655377, content 1212}
-    (let [ type (get data "type")
+    (let [ ctype (get data "ctype")
            from (get data "from")
            to   (get data "to")
            content (get data "content")
@@ -328,7 +342,7 @@
 
            message {:content content :fromid from :toid to
                     :msgtime (l/local-now) :isread false
-                    :fromtype fromtype :type type
+                    :fromtype fromtype :type ctype
                     }
         ]
      (try
@@ -372,17 +386,26 @@
 
   (try
     (let [
-           formdata (:form-params req)
-           doctor (db/get-doctor-byusername (:username formdata))
-           user  (conj {:userinfo (:form-params req)} {:isconfirmed false})
-           ]
+           formdata(:form-params req)
+          ; formdata (apply merge (map #(hash-map % (get formdata %)) (keys formdata)))
 
-      (resp/json {:success true :message "等待审核" :data (db/make-new-doctor user)})
+
+           userinfodata (dissoc formdata "loc" )
+
+           doctor (db/get-doctor-byusername (get  userinfodata "username"))
+
+           user  {:userinfo userinfodata :isconfirmed false :loc (json/read-str (get formdata "loc")) }
+
+           ]
+      (if (nil? doctor) (resp/json {:success true :message "等待审核" :data (db/make-new-doctor user)})
+        (resp/json {:success false :message "用户名已存在"})
+        )
+
       )
 
     (catch Exception ex
       (println (.getMessage ex))
-      {:success false :message (.getMessage ex)}
+      (resp/json {:success false :message (.getMessage ex)})
       )
 
     )
@@ -393,7 +416,7 @@
 
 
 (defn adddoctorbyid [fromid toid channel-hub-key]
-
+  (println 111111111111)
   (try
     (let [
            rels (db/get-relation-doctor {$or [{:doctorid fromid :rid  toid} {:doctorid toid :rid fromid}]})
@@ -402,10 +425,11 @@
            channel (get @channel-hub-key toid)
 
            ]
+      (println 2222222222222222)
 
       (if (> (count rels) 0) (resp/json {:success false :message  "关系已经存在"} ) (
 
-                  (do
+                  do
 
                     (db/makedoctorsvsdoctors {:doctorid fromid :rid toid :rtime (l/local-now)} )
 
@@ -413,7 +437,7 @@
 
                     (resp/json {:success true})
 
-                    )
+
 
                                                                                 ))
 

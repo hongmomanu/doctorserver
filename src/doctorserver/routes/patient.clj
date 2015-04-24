@@ -18,6 +18,7 @@
 
 
   (GET "/patient/getquickdoctorsbyid" [ patientid distance lon lat]
+    (println 1111 patientid distance lon lat)
     (patient/getquickdoctorsbyid  patientid distance lon lat))
 
 

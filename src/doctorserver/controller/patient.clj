@@ -130,7 +130,7 @@
     (let [
            money (db/get-money-byid userid)
            ;totalmoney (:totalmoney money)
-           totalmoney (if (or (nil? money) (:totalmoney money)) 0 (:totalmoney money))
+           totalmoney (if (nil? money)  0 (:totalmoney money))
            addmoney (read-string addmoney)
            ]
 
@@ -234,6 +234,7 @@
 
 
 (defn getquickdoctorsbyid  [patientid distance lon lat]
+  (println patientid distance lon lat)
   (let [
          mydoctors (getmydoctorsbyid patientid false)
          nearbydoctors (db/get-doctors-by-cond  { :loc
@@ -437,6 +438,8 @@
 
 (defn adddoctorbyid [patientid doctorid channel-hub-key]
 
+  (println patientid doctorid)
+
   (try
     (let [
            rels (db/get-relation-patient {:doctorid doctorid :patientid patientid})
@@ -448,7 +451,7 @@
 
       (if (> (count rels) 0) (resp/json {:success false :message  "关系已经存在"} ) (
 
-                                                             (do
+                                                             do
 
                                                                (db/makedoctorsvspatients {:doctorid doctorid :patientid patientid} {:doctorid doctorid :patientid patientid})
 
@@ -458,7 +461,7 @@
 
                                                                )
 
-                                                             ))
+                                                             )
 
 
 
