@@ -65,6 +65,7 @@
                                                         "$lte" (l/local-now) }}
                                                        )}))
          ]
+    (println myapply)
     (resp/json myapply)
     )
 
@@ -434,6 +435,7 @@
 
 (defn adddoctorbyid [patientid doctorid channel-hub-key]
 
+  (println "2222222eeeee")
   (println patientid doctorid)
 
   (try
@@ -453,7 +455,16 @@
 
                                                                (future (send! channel (json/write-str {:type "scanadd" :data (conj {:fromtype 0} (db/get-patient-byid (ObjectId. patientid)))} ) false))
 
-                                                               (resp/json {:success true})
+                                                                                (future (do (doctor/chatprocess {:type "doctorchat" :fromtype 1
+                                                                                                      :from doctorid :to patientid
+                                                                                                      :content "已添加您作为我的患者" :imgid -1} channel-hub-key)
+
+                                                                                          (doctor/chatprocess {:type "doctorchat" :fromtype 0
+                                                                                                               :from patientid :to doctorid
+                                                                                                               :content "已添加您作为我的医生" :imgid -1} channel-hub-key)
+
+                                                                                          ))
+                                                                                (resp/json {:success true})
 
                                                                )
 

@@ -190,6 +190,9 @@
   )
 
 (defn sendrecommendconfirm [recommend channel-hub-key]
+
+  (println "sendrecommendconfirm")
+  (println recommend)
   (when (and (:isdoctoraccepted recommend) (:ispatientaccepted recommend))
 
      (let [
@@ -206,6 +209,8 @@
            ]
 
        (db/makedoctorsvspatients {:doctorid doctorid :patientid patientid} {:doctorid doctorid :patientid patientid})
+
+
 
        (chatprocess {:type "doctorchat" :fromtype 0
                      :from patientid :to doctorid
@@ -332,19 +337,32 @@
 
 ;; chat process func begin here
 (defn chatprocess [data  channel-hub-key]
+  (println "111111")
 ;;{type chatdoctor, from 551b4cb83b83719a9aba9c01, to 551b4e1d31ad8b836c655377, content 1212}
     (let [ ctype (get data "ctype")
+           ctype (if (nil? ctype )(get data (keyword "ctype"))ctype)
+
            from (get data "from")
+           from (if (nil? from )(get data (keyword "from"))from)
+
            to   (get data "to")
+           to   (if (nil? to )(get data (keyword "to"))to)
+
            content (get data "content")
+           content  (if (nil? content )(get data (keyword "content"))content)
+
            fromtype (get data "fromtype")
+           fromtype (if (nil? fromtype )(get data (keyword "fromtype"))fromtype)
+
            imgid (get data "imgid")
+           imgid (if (nil? imgid )(get data (keyword "imgid"))imgid)
 
            message {:content content :fromid from :toid to
                     :msgtime (l/local-now) :isread false
                     :fromtype fromtype :type ctype
                     }
         ]
+      (println "data" message)
      (try
           (do
 
@@ -355,6 +373,7 @@
                  channel (get @channel-hub-key to)
                  channelfrom (get @channel-hub-key from)
              ]
+               (println "channel" "channelfrom" channel  channelfrom)
                (when-not (nil? channel)
                 (send! channel (json/write-str {:type "doctorchat" :data [(conj newmessage {:userinfo  user})]} ) false)
 
@@ -368,11 +387,11 @@
 
 
              )
-                {:success true}
+            (resp/json {:success true})
             )
           (catch Exception ex
           (println (.getMessage ex))
-            {:success false :message (.getMessage ex)}
+            (resp/json {:success false :message (.getMessage ex)})
             ))
 
     ;;(json/write-str a :value-fn common/write-ObjectId)
@@ -424,6 +443,7 @@
 
            channel (get @channel-hub-key toid)
 
+
            ]
       (println 2222222222222222)
 
@@ -434,6 +454,17 @@
                     (db/makedoctorsvsdoctors {:doctorid fromid :rid toid :rtime (l/local-now)} )
 
                     (future (send! channel (json/write-str {:type "scanadd"  :data (conj {:fromtype 1} (db/get-doctor-byid (ObjectId. fromid)))} ) false))
+
+                  (future (do (chatprocess {:type "doctorchat" :fromtype 1
+                                :from fromid :to toid
+                                :content "已添加您为医生好友!" :imgid -1} channel-hub-key)
+                            (chatprocess {:type "doctorchat" :fromtype 1
+                                          :from toid :to fromid
+                                          :content "已添加您为医生好友!" :imgid -1} channel-hub-key)
+
+                            ))
+
+
 
                     (resp/json {:success true})
 
