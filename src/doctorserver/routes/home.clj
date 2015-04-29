@@ -1,9 +1,11 @@
 (ns doctorserver.routes.home
+  (:use clj.qrgen)
   (:require [doctorserver.layout :as layout]
             [compojure.core :refer [defroutes GET POST]]
             [ring.util.response :as resp]
             [clojure.java.io :as io]
             [noir.io :as nio]
+
             [clj-time.coerce :as c]
             [clj-time.local :as l]
             [noir.response :as nresp]
@@ -35,12 +37,27 @@
 
     )
 
+
+(GET "/common/makeqrcode" [content]
+
+
+  (let [
+         timenow (c/to-long  (l/local-now))
+         uploadpath  (str commonfunc/datapath "upload/")
+         filename (str  timenow "QRCode.png")
+         ]
+    ;;(println filename)
+
+    (io/copy (io/file (from content)) (io/file (str uploadpath filename)))
+    (resp/redirect (str "/files/" filename))
+
+    )
+  )
+
   (POST "/common/uploadfile"  [file ]
 
 
-    (println "file up loaddd")
 
-    (println file)
 
     (let [
           uploadpath  (str commonfunc/datapath "upload/")
