@@ -5,6 +5,7 @@
             [doctorserver.routes.doctor :refer [doctor-routes]]
             [doctorserver.routes.settings :refer [settings-routes]]
             [doctorserver.routes.patient :refer [patient-routes]]
+            [doctorserver.routes.hospital :refer [hospital-routes]]
             [doctorserver.public.websocket :as websocket]
             [doctorserver.middleware
              :refer [development-middleware production-middleware]]
@@ -61,6 +62,7 @@
         doctor-routes
         settings-routes
         patient-routes
+        hospital-routes
         base-routes)
       development-middleware
       production-middleware))

@@ -9,6 +9,7 @@
             [clj-time.coerce :as c]
             [clj-time.local :as l]
             [noir.response :as nresp]
+            [org.httpkit.client :as http]
             [doctorserver.public.common :as commonfunc]
             [ring.util.response :refer [file-response]]
 
@@ -22,7 +23,7 @@
   (layout/render "about.html"))
 
 (defroutes home-routes
-  (GET "/" [] (home-page))
+  (GET "/" req (do (println req) (home-page)) )
 
     (GET "/downloadtest/*" [] (resp/redirect "/cordova-app-hello-world-3.6.3.tar.gz"))
 
@@ -36,6 +37,7 @@
     (file-response (str commonfunc/datapath "upload/" filename))
 
     )
+
 
 
 (GET "/common/makeqrcode" [content]
@@ -54,10 +56,26 @@
     )
   )
 
+  (GET "/common/geturlbywap" [url]
+    (println 11)
+    (http/get "http://wap.0575fy.com/"
+
+      {:timeout 200             ; ms
+
+       :user-agent "Mozilla/5.0 (Linux; Android 4.2.2; LGL22 Build/JDQ39B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.109 Mobile Safari/537.36"
+       :headers {"user-agent" "Mozilla/5.0 (Linux; Android 4.2.2; LGL22 Build/JDQ39B) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.109 Mobile Safari/537.36"}
+       }
+
+
+      (fn [{:keys [status headers body error]}] ;; asynchronous response handling
+        (if error
+          (println "Failed, exception is " error)
+          (do (println "Async HTTP GET: " status) body )))
+      )
+
+    )
+
   (POST "/common/uploadfile"  [file ]
-
-
-
 
     (let [
           uploadpath  (str commonfunc/datapath "upload/")
