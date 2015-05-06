@@ -34,6 +34,16 @@
     (hospital/getappointmentcategorydoctors pid)
 
     )
+  (GET "/hospital/getreservedoctortimes" [pid]
+
+    (hospital/getreservedoctortimes pid)
+
+    )
+  (GET "/hospital/getpossibleills" []
+
+    (hospital/getpossibleills )
+
+    )
 
 
   )
