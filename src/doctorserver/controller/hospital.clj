@@ -57,8 +57,8 @@
   )
 
 (defn getpossibleills []
-
-  (resp/json [{:name "乳房胀痛"} {:name "便秘、便血"} {:name "内、外痔"}
+  (resp/json  (db/getilldata))
+  #_(resp/json [{:name "乳房胀痛"} {:name "便秘、便血"} {:name "内、外痔"}
               {:name "凸眼"} {:name "口吃"} {:name "口臭"}
               {:name "吞咽困难"} {:name "咳嗽"} {:name "咳血"}
               {:name "喉咙异物"} {:name "喉咙痛、扁桃体发炎"} {:name "呕吐、吐血"}
@@ -82,6 +82,8 @@
               {:name "骨质疏松"} {:name "体重减轻"} {:name "高血压"} {:name "黄疸"} {:name "糖尿病"}
 
               ])
+
+
 
   )
 

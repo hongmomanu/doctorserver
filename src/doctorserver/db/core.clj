@@ -48,6 +48,13 @@
 
 )
 
+(defn getilldata []
+
+  (mc/find-maps
+    db "illdata" {} ["name" "depts"]
+    )
+  )
+
 (defn update-doctor [cond modified]
   (mc/update db "doctors" cond {$set modified} )
   )

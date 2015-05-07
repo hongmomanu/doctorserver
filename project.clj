@@ -28,6 +28,7 @@
                  [clj-time "0.8.0"]
                  [cheshire "5.1.1"]
                  [clj.qrgen "0.3.0"]
+                 [clj-http "0.9.2"]
                  ]
 
   :min-lein-version "2.0.0"
