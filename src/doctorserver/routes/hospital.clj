@@ -44,6 +44,11 @@
     (hospital/getpossibleills )
 
     )
+  (POST "/hospital/getilldetailbyid" [illid]
+
+    (hospital/getilldetailbyid illid)
+
+    )
 
 
   )

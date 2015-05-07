@@ -55,6 +55,12 @@
     )
   )
 
+(defn getilldatabyid [illid]
+  (mc/find-map-by-id
+    db "illdata" illid
+    )
+  )
+
 (defn update-doctor [cond modified]
   (mc/update db "doctors" cond {$set modified} )
   )

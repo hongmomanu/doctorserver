@@ -86,6 +86,10 @@
 
 
   )
+(defn getilldetailbyid [illid]
+    (resp/json  (db/getilldatabyid (ObjectId. illid)))
+
+  )
 
 
 
