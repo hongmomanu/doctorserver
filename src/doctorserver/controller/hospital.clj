@@ -108,6 +108,16 @@
     )
 
   )
+
+(defn getassayclassifybypid [pid]
+  (let [
+         datas (db/get-assayclassify-by-cond {:parentid pid})
+         mapdatas (map #(conj {:counts (db/get-assayclassifynum-by-cond {:parentid (str (:_id %))})} %) datas)
+         ]
+    (resp/json mapdatas)
+    )
+
+  )
 (defn getaidclassifybypid [pid]
   (let [
          datas (db/get-aidclassify-by-cond {:parentid pid})
@@ -115,6 +125,17 @@
          ]
     (resp/json mapdatas)
     )
+
+  )
+
+(defn getaiddetailbyid [pid]
+
+  (resp/json  (db/getaiddetail-by-id (ObjectId. pid)))
+
+  )
+(defn getaidsbypid [pid]
+
+   (resp/json  (db/getaids-by-cond {:parentids pid} ["name"]))
 
   )
 (defn getdrugdetailbyid [drugid]

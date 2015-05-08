@@ -59,6 +59,11 @@
     (hospital/getdrugclassifybypid pid)
 
     )
+  (GET "/hospital/getassayclassifybypid" [pid]
+
+    (hospital/getassayclassifybypid pid)
+
+    )
   (GET "/hospital/getaidclassifybypid" [pid]
 
     (hospital/getaidclassifybypid pid)
@@ -67,6 +72,16 @@
   (POST "/hospital/getdrugdetailbyid" [drugid]
 
     (hospital/getdrugdetailbyid drugid)
+
+    )
+  (POST "/hospital/getaiddetailbyid" [pid]
+
+    (hospital/getaiddetailbyid pid)
+
+    )
+  (GET "/hospital/getaidsbypid" [pid]
+
+    (hospital/getaidsbypid pid)
 
     )
   (POST "/hospital/getilldetailbyid" [illid]

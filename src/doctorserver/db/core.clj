@@ -88,10 +88,35 @@
     db "drugdetail" drugid
     )
   )
+
+(defn getaiddetail-by-id[aid]
+  (mc/find-map-by-id
+    db "aiddetail" aid
+    )
+  )
+(defn getaids-by-cond [cond fields]
+  (mc/find-maps
+    db "aiddetail" cond fields
+    )
+  )
 (defn get-drugsclassify-by-cond [cond]
 
   (mc/find-maps
     db "drugsclassify" cond
+    )
+  )
+(defn get-assayclassify-by-cond [cond]
+
+  (mc/find-maps
+    db "assayclassify" cond
+    )
+  )
+
+
+
+(defn getaids-by-cond [cond fields]
+  (mc/find-maps
+    db "aiddetail" cond fields
     )
   )
 (defn get-aidclassify-by-cond [cond]
@@ -105,6 +130,12 @@
 
   (mc/count
     db "drugsclassify" cond
+    )
+  )
+(defn get-assayclassifynum-by-cond [cond]
+
+  (mc/count
+    db "assayclassify" cond
     )
   )
 (defn get-aidclassifynum-by-cond [cond]
