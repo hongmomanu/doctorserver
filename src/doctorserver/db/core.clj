@@ -94,11 +94,23 @@
     db "drugsclassify" cond
     )
   )
+(defn get-aidclassify-by-cond [cond]
+
+  (mc/find-maps
+    db "aidclassify" cond
+    )
+  )
 
 (defn get-drugsclassifynum-by-cond [cond]
 
   (mc/count
     db "drugsclassify" cond
+    )
+  )
+(defn get-aidclassifynum-by-cond [cond]
+
+  (mc/count
+    db "aidclassify" cond
     )
   )
 
