@@ -367,6 +367,31 @@ db.commondrugs.insert(
 
 )
 
+db.drugsclassify.insert(
+  {
+     name:"诊断用药物",
+     parentid:"root"
+
+  }
+
+)
+db.drugsclassify.insert(
+  {
+     name:"影像诊断用药",
+     parentid:"554c2c5384697c30fbb8ff89"
+
+  }
+
+)
+db.drugsclassify.insert(
+  {
+     name:"其他诊断用药",
+     parentid:"554c2c5384697c30fbb8ff89"
+
+  }
+
+)
+
 db.drugdetail.insert(
   {
      name:"芬必得",

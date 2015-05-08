@@ -88,6 +88,20 @@
     db "drugdetail" drugid
     )
   )
+(defn get-drugsclassify-by-cond [cond]
+
+  (mc/find-maps
+    db "drugsclassify" cond
+    )
+  )
+
+(defn get-drugsclassifynum-by-cond [cond]
+
+  (mc/count
+    db "drugsclassify" cond
+    )
+  )
+
 (defn getdrugs-by-cond [cond fields]
   (mc/find-maps
     db "drugdetail" cond fields
