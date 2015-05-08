@@ -91,6 +91,18 @@
 
   )
 
+(defn getcommondrugs []
+  (resp/json  (db/getcommondrugs-by-cond {} ))
+
+  )
+
+(defn getdrugsbypid [pid]
+  (resp/json  (db/getdrugs-by-cond {:parentids pid} ["name"]))
+  )
+(defn getdrugdetailbyid [drugid]
+  (resp/json  (db/getdrugdetail-by-id (ObjectId. drugid)))
+  )
+
 
 
 

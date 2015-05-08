@@ -44,6 +44,21 @@
     (hospital/getpossibleills )
 
     )
+  (GET "/hospital/getcommondrugs" []
+
+    (hospital/getcommondrugs )
+
+    )
+  (GET "/hospital/getdrugsbypid" [pid]
+
+    (hospital/getdrugsbypid pid)
+
+    )
+  (POST "/hospital/getdrugdetailbyid" [drugid]
+
+    (hospital/getdrugdetailbyid drugid)
+
+    )
   (POST "/hospital/getilldetailbyid" [illid]
 
     (hospital/getilldetailbyid illid)

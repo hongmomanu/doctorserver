@@ -77,6 +77,23 @@
 
   )
 
+(defn getcommondrugs-by-cond [cond]
+  (mc/find-maps
+    db "commondrugs" cond
+    )
+
+  )
+(defn getdrugdetail-by-id[drugid]
+  (mc/find-map-by-id
+    db "drugdetail" drugid
+    )
+  )
+(defn getdrugs-by-cond [cond fields]
+  (mc/find-maps
+    db "drugdetail" cond fields
+    )
+  )
+
 (defn create-message [message]
     (mc/insert-and-return db "messages" message)
 
