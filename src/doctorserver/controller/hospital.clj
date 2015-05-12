@@ -14,22 +14,26 @@
 
 (defn getappointmentcategory []
 
-  (resp/json [{:name "常约医生"} {:name "外科"} {:name "内科"}
+  #_(resp/json [{:name "常约医生"} {:name "外科"} {:name "内科"}
               {:name "生殖中心"} {:name "五官"} {:name "皮肤"}
               {:name "中医"} {:name "妇产"} {:name "儿科"}
               {:name "疼痛"} {:name "肿瘤"} {:name "医学美容"}
 
               ])
 
+  (resp/json (db/get-hospitaldeptclassify ))
+
   )
 (defn getappointmentcategorychild [pid]
 
-  (resp/json [{:name "胃肠外科"} {:name "aaa"} {:name "bbb"}
+  #_(resp/json [{:name "胃肠外科"} {:name "aaa"} {:name "bbb"}
               {:name "bbbb"} {:name "胃肠外科"} {:name "胃肠外科"}
               {:name "cc"} {:name "eee"} {:name "ffff"}
               {:name "gggg"} {:name "hhh"} {:name "iiii"}
 
               ])
+
+  (resp/json (db/get-hospitaldept-by-cond {:parentid pid}))
 
   )
 

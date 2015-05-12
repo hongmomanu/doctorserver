@@ -104,6 +104,17 @@
     db "aiddetail" cond fields
     )
   )
+
+(defn get-hospitaldeptclassify []
+  (mc/find-maps
+    db "hospitaldeptclassify"
+    )
+  )
+(defn get-hospitaldept-by-cond [cond]
+  (mc/find-maps
+    db "hospitaldept" cond
+    )
+  )
 (defn getassays-by-cond  [cond fields]
   (mc/find-maps
     db "assaydetail" cond fields

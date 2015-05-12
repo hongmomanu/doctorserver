@@ -449,7 +449,17 @@ db.assaydetail.insert({
 
 
 
+db.hospitaldept.insert({
+  "name":"疼痛科专家",
+  "type":1,
+  "deptcode":"136",
+  "parentid":"55515ac584697c30fbb8ff9a"
+})
 
+db.hospitaldeptclassify.insert({
+  "name":"肿瘤"
+
+})
 
 
 db.enumerate.insert({
