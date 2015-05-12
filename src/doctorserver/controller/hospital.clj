@@ -5,6 +5,7 @@
             [noir.response :as resp]
             [clojure.data.json :as json]
             [monger.json]
+            [clj-http.client :as client]
             )
   (:import [org.bson.types ObjectId]
            )
@@ -133,9 +134,32 @@
   (resp/json  (db/getaiddetail-by-id (ObjectId. pid)))
 
   )
+(defn getassaydetailbyid [pid]
+
+  (resp/json  (db/getassaydetail-by-id (ObjectId. pid)))
+
+  )
+
+(defn log-sendsoap [url content action]
+  (let [
+         ;h {"SOAPAction" action}
+         content (client/post url {:body content  :content-type  "application/soap+xml; charset=utf-8"   :socket-timeout 10000
+                                   :conn-timeout 10000})       ;:form-params (dissoc query-params "url")
+         ]
+    (:body content)
+    )
+  ;(resp/json {:success true})
+
+  )
+
 (defn getaidsbypid [pid]
 
    (resp/json  (db/getaids-by-cond {:parentids pid} ["name"]))
+
+  )
+(defn getassaysbypid [pid]
+
+   (resp/json  (db/getassays-by-cond {:parentids pid} ["name"]))
 
   )
 (defn getdrugdetailbyid [drugid]

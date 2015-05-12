@@ -94,9 +94,19 @@
     db "aiddetail" aid
     )
   )
+(defn getassaydetail-by-id[aid]
+  (mc/find-map-by-id
+    db "assaydetail" aid
+    )
+  )
 (defn getaids-by-cond [cond fields]
   (mc/find-maps
     db "aiddetail" cond fields
+    )
+  )
+(defn getassays-by-cond  [cond fields]
+  (mc/find-maps
+    db "assaydetail" cond fields
     )
   )
 (defn get-drugsclassify-by-cond [cond]

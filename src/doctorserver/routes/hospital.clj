@@ -79,11 +79,27 @@
     (hospital/getaiddetailbyid pid)
 
     )
+  (POST "/hospital/getassaydetailbyid" [pid]
+
+    (hospital/getassaydetailbyid pid)
+
+    )
   (GET "/hospital/getaidsbypid" [pid]
 
     (hospital/getaidsbypid pid)
 
     )
+  (GET "/hospital/getassaysbypid" [pid]
+
+    (hospital/getassaysbypid pid)
+
+    )
+
+  (POST "/hospital/sendsoap" [url content action]
+
+    (hospital/log-sendsoap url content action)
+    )
+
   (POST "/hospital/getilldetailbyid" [illid]
 
     (hospital/getilldetailbyid illid)
