@@ -1,0 +1,33 @@
+<table id="possibleillmanagerpanel">
+    <thead>
+    <tr>
+        <th data-options="field:'itemid',width:80">Item ID</th>
+        <th data-options="field:'productid',width:100,
+                        formatter:function(value,row){
+                            return row.productname;
+                        },
+                        editor:{
+                            type:'combobox',
+                            options:{
+                                valueField:'productid',
+                                textField:'productname',
+                                method:'get',
+                                url:'products.json',
+                                required:true
+                            }
+                        }">Product</th>
+        <th data-options="field:'listprice',width:80,align:'right',editor:{type:'numberbox',options:{precision:1}}">List Price</th>
+        <th data-options="field:'unitcost',width:80,align:'right',editor:'numberbox'">Unit Cost</th>
+        <th data-options="field:'attr1',width:250,editor:'textbox'">Attribute</th>
+        <th data-options="field:'status',width:60,align:'center',editor:{type:'checkbox',options:{on:'P',off:''}}">Status</th>
+    </tr>
+    </thead>
+</table>
+
+<div id="tb" style="height:auto">
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" >Append</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" >Remove</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >Accept</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" >Reject</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" >GetChanges</a>
+</div>
