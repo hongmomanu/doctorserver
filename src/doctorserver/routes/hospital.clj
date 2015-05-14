@@ -106,5 +106,11 @@
 
     )
 
+  (POST "/hospital/getmenusbytype" [type]
+
+    (hospital/getmenusbytype type)
+
+    )
+
 
   )

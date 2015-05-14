@@ -50,6 +50,16 @@
 
   )
 
+(defn getmenusbytype [type]
+
+  (resp/json (case type
+    "功能配置" [{:text "疾病管理" :value "possibleillmanager"}]
+
+   [])
+    )
+
+  )
+
 (defn getreservedoctortimes [pid]
 
   (resp/json [
