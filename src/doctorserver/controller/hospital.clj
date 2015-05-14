@@ -75,6 +75,20 @@
   (resp/json  (db/getilldata))
   )
 
+(defn getallhospitaldepts []
+  (resp/json (db/get-hospitaldepts))
+  )
+(defn getdeptsbycode [codes]
+
+  (resp/json (db/get-depts-by-code codes))
+  )
+(defn editilldata [illdatas]
+
+  (let [items (json/read-str illdatas :key-fn keyword)]
+    (dorun (map #(do (db/editilldata (dissoc % :_id) (ObjectId. (:_id %)))) items))
+    (resp/json {:success true})
+    )
+  )
 (defn getpossibleillsbypage [rowsname totalname page limit]
 
   (let [

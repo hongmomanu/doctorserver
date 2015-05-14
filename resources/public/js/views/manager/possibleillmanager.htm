@@ -3,32 +3,37 @@
     <tr>
         <th data-options="field:'name',width:80">Item ID</th>
         <th data-options="field:'depts',width:100,
+                        formatter:function(value,row){
 
+                            return row.depts;
+                        },
                         editor:{
                             type:'combobox',
                             options:{
-                                valueField:'productid',
-                                textField:'productname',
+                                valueField:'deptcode',
+                                textField:'name',
                                 method:'get',
-                                url:'products.json',
+                                multiple:true,
+                                multiline:true,
+                                url:'../hospital/getallhospitaldepts',
                                 required:true
                             }
                         }">Product</th>
-        <th data-options="field:'about',width:80,align:'right',editor:{type:'textbox',options:{precision:1}}">List Price</th>
+        <th data-options="field:'about',width:80,align:'right',editor:{type:'textbox'}">List Price</th>
         <th data-options="field:'illreasion',width:80,align:'right',editor:'textbox'">Unit Cost</th>
         <th data-options="field:'illdescription',width:250,editor:'textbox'">Attribute</th>
-        <th data-options="field:'checking',width:60,align:'center',editor:{type:'textbox',options:{on:'P',off:''}}">Status</th>
-        <th data-options="field:'diagnosis',width:60,align:'center',editor:{type:'textbox',options:{on:'P',off:''}}">Status</th>
-        <th data-options="field:'complication',width:60,align:'center',editor:{type:'textbox',options:{on:'P',off:''}}">Status</th>
-        <th data-options="field:'treatment',width:60,align:'center',editor:{type:'textbox',options:{on:'P',off:''}}">Status</th>
+        <th data-options="field:'checking',width:60,align:'center',editor:{type:'textbox'}">Status</th>
+        <th data-options="field:'diagnosis',width:60,align:'center',editor:{type:'textbox'}">Status</th>
+        <th data-options="field:'complication',width:60,align:'center',editor:{type:'textbox'}">Status</th>
+        <th data-options="field:'treatment',width:60,align:'center',editor:{type:'textbox'}">Status</th>
     </tr>
     </thead>
 </table>
 
-<div id="tb" style="height:auto">
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" >Append</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" >Remove</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >Accept</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" >Reject</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" >GetChanges</a>
+<div id="possibleillpaneltb" style="height:auto">
+    <!--<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" >Append</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" >Remove</a>-->
+    <a href="javascript:void(0)" class="easyui-linkbutton save" data-options="iconCls:'icon-save',plain:true" >保存</a>
+    <!--<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" >Reject</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" >GetChanges</a>-->
 </div>

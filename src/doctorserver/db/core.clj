@@ -5,7 +5,7 @@
     [monger.core :as mg]
     [monger.collection :as mc]
     [monger.operators :refer :all]
-    [monger.query :refer :all]
+    [monger.query :refer [with-collection find options paginate] ]
 
     ))
 
@@ -65,11 +65,21 @@
 
   )
 
+(defn editilldata [item id]
+  (mc/update db "illdata" {:_id id} {$set item} )
+  )
+
 
 (defn getilldatanum []
 
   (mc/count
     db "illdata" {}
+    )
+  )
+
+(defn get-hospitaldepts []
+  (mc/find-maps
+    db "hospitaldept" {} ["name" "deptcode"]
     )
   )
 
@@ -226,6 +236,14 @@
   (mc/find-maps
     db "doctors" {:_id {$in ids}}
     )
+  )
+
+(defn get-depts-by-code [codes]
+
+  (mc/find-maps
+    db "hospitaldept" {:deptcode {$in codes}}
+    )
+
   )
 
 

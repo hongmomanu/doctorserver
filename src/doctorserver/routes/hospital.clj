@@ -45,6 +45,18 @@
 
     )
 
+  (GET "/hospital/getallhospitaldepts"[]
+    (hospital/getallhospitaldepts )
+    )
+
+  (POST "/hospital/editilldata"[illdata]
+    (hospital/editilldata illdata)
+    )
+
+  (POST "/hospital/getdeptsbycode"[codes]
+    (hospital/getdeptsbycode codes)
+    )
+
   (POST "/hospital/getpossibleillsbypage" [rowsname totalname page limit]
     (hospital/getpossibleillsbypage rowsname totalname page limit )
     )
