@@ -73,30 +73,17 @@
 
 (defn getpossibleills []
   (resp/json  (db/getilldata))
-  #_(resp/json [{:name "乳房胀痛"} {:name "便秘、便血"} {:name "内、外痔"}
-              {:name "凸眼"} {:name "口吃"} {:name "口臭"}
-              {:name "吞咽困难"} {:name "咳嗽"} {:name "咳血"}
-              {:name "喉咙异物"} {:name "喉咙痛、扁桃体发炎"} {:name "呕吐、吐血"}
-              {:name "坐股神经痛"} {:name "压力引起之身心不适"} {:name "多(手)汗"}
-              {:name "大便失禁"} {:name "失眠(多眠)症"} {:name "小便浑浊或气泡"}
-              {:name "小儿腹泻、发烧、腹胀、便秘 "} {:name "尿失禁"} {:name "心悸"}
-              {:name "心窝灼热感"} {:name "性病"} {:name "感冒"}
-              {:name "手脚麻痹"} {:name "打鼾"} {:name "掉头发"}
-              {:name "更年期障碍"} {:name "气促、喘不过气"} {:name "水肿"}
-              {:name "消化不良、胃酸过多"} {:name "灰指甲、鸡眼"} {:name "狐臭"}
-              {:name "疲劳、倦怠 癫痫"} {:name "发育不良"} {:name "皮屑疹"}
-              {:name "眩晕(天旋地转)"} {:name "眼前小黑影(飞蚊症)"} {:name "眼睛干"}
-              {:name "眼睛疲劳、红、氧、疼痛"} {:name "耳朵痛、耳朵塞住、流鼻血"} {:name "耳鸣、鼻塞、流鼻涕"}
-              {:name "肌力减退或丧失"} {:name "肌肉压痛"} {:name "肌肉抽搐"}
-              {:name "肝功能异常"} {:name "肝硬化"} {:name "肥胖"}
-              {:name "肩背酸痛"} {:name "胸痛"} {:name "腰酸背痛"}
-              {:name "腹痛"} {:name "腹胀、腹泻"} {:name "蜂窝组织炎"}
-              {:name "血尿、尿频、解尿困难"} {:name "贫血"} {:name "身体表面长硬块"}
-              {:name "过敏性鼻炎"} {:name "关节酸痛"} {:name "阴道分泌物增加"}
-              {:name "静脉曲张"} {:name "头痛、头晕"} {:name "颈部肿大(甲状腺肿大、淋巴腺肿大)"}
-              {:name "骨质疏松"} {:name "体重减轻"} {:name "高血压"} {:name "黄疸"} {:name "糖尿病"}
+  )
 
-              ])
+(defn getpossibleillsbypage [rowsname totalname page limit]
+
+  (let [
+         nums  (db/getilldatanum)
+         results (db/getilldatapages (read-string page) (read-string limit))
+         ]
+
+    (resp/json (assoc {} rowsname results totalname nums))
+    )
 
 
 

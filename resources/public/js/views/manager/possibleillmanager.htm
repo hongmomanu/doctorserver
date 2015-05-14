@@ -1,11 +1,9 @@
 <table id="possibleillmanagerpanel">
     <thead>
     <tr>
-        <th data-options="field:'itemid',width:80">Item ID</th>
-        <th data-options="field:'productid',width:100,
-                        formatter:function(value,row){
-                            return row.productname;
-                        },
+        <th data-options="field:'name',width:80">Item ID</th>
+        <th data-options="field:'depts',width:100,
+
                         editor:{
                             type:'combobox',
                             options:{
@@ -16,10 +14,13 @@
                                 required:true
                             }
                         }">Product</th>
-        <th data-options="field:'listprice',width:80,align:'right',editor:{type:'numberbox',options:{precision:1}}">List Price</th>
-        <th data-options="field:'unitcost',width:80,align:'right',editor:'numberbox'">Unit Cost</th>
-        <th data-options="field:'attr1',width:250,editor:'textbox'">Attribute</th>
-        <th data-options="field:'status',width:60,align:'center',editor:{type:'checkbox',options:{on:'P',off:''}}">Status</th>
+        <th data-options="field:'about',width:80,align:'right',editor:{type:'textbox',options:{precision:1}}">List Price</th>
+        <th data-options="field:'illreasion',width:80,align:'right',editor:'textbox'">Unit Cost</th>
+        <th data-options="field:'illdescription',width:250,editor:'textbox'">Attribute</th>
+        <th data-options="field:'checking',width:60,align:'center',editor:{type:'textbox',options:{on:'P',off:''}}">Status</th>
+        <th data-options="field:'diagnosis',width:60,align:'center',editor:{type:'textbox',options:{on:'P',off:''}}">Status</th>
+        <th data-options="field:'complication',width:60,align:'center',editor:{type:'textbox',options:{on:'P',off:''}}">Status</th>
+        <th data-options="field:'treatment',width:60,align:'center',editor:{type:'textbox',options:{on:'P',off:''}}">Status</th>
     </tr>
     </thead>
 </table>

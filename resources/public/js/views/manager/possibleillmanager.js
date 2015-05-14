@@ -10,7 +10,7 @@ define(function () {
             rownumbers: true,
             method:'post',
             fitColumns:true,
-            url:'../hospital/getills',
+            url:'../hospital/getpossibleillsbypage',
             remoteSort: false,
             /*sortName:'time',
              sortOrder:'desc',*/

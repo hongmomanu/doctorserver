@@ -3,8 +3,9 @@
     [yesql.core :refer [defqueries]]
     [clojure.java.io :as io]
     [monger.core :as mg]
-                      [monger.collection :as mc]
-                      [monger.operators :refer :all]
+    [monger.collection :as mc]
+    [monger.operators :refer :all]
+    [monger.query :refer :all]
 
     ))
 
@@ -52,6 +53,23 @@
 
   (mc/find-maps
     db "illdata" {} ["name" "depts"]
+    )
+  )
+
+(defn getilldatapages [page limit]
+
+
+  (with-collection db "illdata"
+    (find {})
+    (paginate :page page :per-page limit))
+
+  )
+
+
+(defn getilldatanum []
+
+  (mc/count
+    db "illdata" {}
     )
   )
 
