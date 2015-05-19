@@ -114,6 +114,21 @@
 
   )
 
+(defn getcommondrugsbypage  [rowsname totalname page limit]
+
+  (let [
+         nums  (db/getcommondrugsnum {})
+         results (db/getcommondrugsbypage (read-string page) (read-string limit))
+
+         ]
+
+    (resp/json (assoc {} rowsname results totalname nums))
+    )
+
+
+
+  )
+
 
 
 

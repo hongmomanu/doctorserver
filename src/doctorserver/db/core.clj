@@ -64,6 +64,14 @@
     (paginate :page page :per-page limit))
 
   )
+(defn getcommondrugsbypage [page limit]
+
+
+  (with-collection db "commondrugs"
+    (find {})
+    (paginate :page page :per-page limit))
+
+  )
 
 (defn getdrugdatapages [page limit]
 
@@ -200,6 +208,13 @@
 
   (mc/count
     db "aidclassify" cond
+    )
+  )
+
+(defn getcommondrugsnum [cond]
+
+  (mc/count
+    db "commondrugs" cond
     )
   )
 

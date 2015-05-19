@@ -65,6 +65,10 @@
     (hospital/getdrugsbypage rowsname totalname page limit )
     )
 
+  (POST "/hospital/getcommondrugsbypage" [rowsname totalname page limit]
+    (hospital/getcommondrugsbypage rowsname totalname page limit )
+    )
+
   (GET "/hospital/getcommondrugs" []
 
     (hospital/getcommondrugs )
