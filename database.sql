@@ -468,6 +468,20 @@ db.enumerate.insert({
  "enumeratetype" : "section"
 })
 
+db.experts.insert({
+  "name":"骨科专家",
+  "data":[
+  {"name":"佟杰","code":"741"},
+  {"name":"潘宏武","code":"477"},
+  {"name":"周学文","code":"506"},
+  {"name":"艾建平","code":"480"},
+  {"name":"康维杰","code":"511"},
+  {"name":"钱万锋","code":"478"},
+  {"name":"孟延丰","code":"508"},
+  {"name":"沈海良","code":"479"}
+  ]
+})
+
 儿　科
 儿童智力开发中心
 耳鼻咽喉科

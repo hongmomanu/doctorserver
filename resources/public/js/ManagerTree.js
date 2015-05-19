@@ -11,12 +11,12 @@ define(function(){
                     var tree=$(this);
                     var me=this;
                     if(tree.tree('isLeaf', node.target)){
-                        var isnew=false;
+                       /* var isnew=false;
                         if($('#tabs').tabs('exists',1)){
                             $('#tabs').tabs('select',1);
                             isnew=$('#tabs').tabs('getSelected').panel('options').id!=node.id;
                         }
-                        if(!$('#tabs').tabs('exists',1)||me.nodeid!=node.id||isnew){
+                        if(!$('#tabs').tabs('exists',1)||me.nodeid!=node.id||isnew){*/
                             var folder=tree.attr('folder');
                             var htmlfile='text!'+folder+node.value+'.htm';
                             var jsfile=folder+node.value;
@@ -27,7 +27,7 @@ define(function(){
                                 me.nodeid=node.id;
                             });
 
-                        }
+                        //}
                     }
                 },
                 onBeforeLoad:function(node, param){

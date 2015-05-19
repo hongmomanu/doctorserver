@@ -65,6 +65,15 @@
 
   )
 
+(defn getdrugdatapages [page limit]
+
+
+  (with-collection db "drugdetail"
+    (find {})
+    (paginate :page page :per-page limit))
+
+  )
+
 (defn editilldata [item id]
   (mc/update db "illdata" {:_id id} {$set item} )
   )
@@ -212,6 +221,11 @@
 (defn get-message-num [cond]
   (mc/count db "messages" cond)
   )
+(defn getdrugdatanum []
+  (mc/count
+    db "drugdetail" {}
+    )
+  )
 
 (defn update-message [cond modified]
 
@@ -255,7 +269,9 @@
 (defn get-relation-patient [cond]
   (mc/find-maps db "doctorsvspatients" cond )
   )
-
+(defn get-experts []
+  (mc/find-maps db "experts" {} )
+  )
 
 (defn get-patients-byid [ids]
   (mc/find-maps

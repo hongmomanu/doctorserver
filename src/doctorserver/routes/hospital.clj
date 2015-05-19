@@ -61,14 +61,28 @@
     (hospital/getpossibleillsbypage rowsname totalname page limit )
     )
 
+  (POST "/hospital/getdrugsbypage" [rowsname totalname page limit]
+    (hospital/getdrugsbypage rowsname totalname page limit )
+    )
+
   (GET "/hospital/getcommondrugs" []
 
     (hospital/getcommondrugs )
 
     )
+  (GET "/hospital/getallclassify" []
+
+    (hospital/getallclassify )
+
+    )
   (GET "/hospital/getdrugsbypid" [pid]
 
     (hospital/getdrugsbypid pid)
+
+    )
+  (GET "/hospital/getexperts" []
+
+    (hospital/getexperts )
 
     )
   (GET "/hospital/getdrugclassifybypid" [pid]

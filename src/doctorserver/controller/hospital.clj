@@ -14,26 +14,22 @@
 
 (defn getappointmentcategory []
 
-  #_(resp/json [{:name "常约医生"} {:name "外科"} {:name "内科"}
-              {:name "生殖中心"} {:name "五官"} {:name "皮肤"}
-              {:name "中医"} {:name "妇产"} {:name "儿科"}
-              {:name "疼痛"} {:name "肿瘤"} {:name "医学美容"}
 
-              ])
 
   (resp/json (db/get-hospitaldeptclassify ))
 
   )
 (defn getappointmentcategorychild [pid]
 
-  #_(resp/json [{:name "胃肠外科"} {:name "aaa"} {:name "bbb"}
-              {:name "bbbb"} {:name "胃肠外科"} {:name "胃肠外科"}
-              {:name "cc"} {:name "eee"} {:name "ffff"}
-              {:name "gggg"} {:name "hhh"} {:name "iiii"}
 
-              ])
 
   (resp/json (db/get-hospitaldept-by-cond {:parentid pid}))
+
+  )
+
+(defn getexperts []
+
+  (resp/json (db/get-experts ))
 
   )
 
@@ -53,7 +49,7 @@
 (defn getmenusbytype [type]
 
   (resp/json (case type
-    "功能配置" [{:text "疾病管理" :value "possibleillmanager"}]
+    "功能配置" [{:text "疾病管理" :value "possibleillmanager"} {:text "常见药物" :value "commondrugmanager"}{:text "药物明细" :value "drugdetailmanager"}]
 
    [])
     )
@@ -100,6 +96,32 @@
     )
 
 
+
+  )
+
+(defn getdrugsbypage [rowsname totalname page limit]
+
+  (let [
+         nums  (db/getdrugdatanum)
+         results (db/getdrugdatapages (read-string page) (read-string limit))
+         results (map #(conj % {:parentids (clojure.string/join "," (:parentids %))}) results)
+         ]
+
+    (resp/json (assoc {} rowsname results totalname nums))
+    )
+
+
+
+  )
+
+(defn getallclassify []
+  (let [
+        commonlist (map #(conj {} {:text (:name %) :id (str (:_id %))}) (db/getcommondrugs-by-cond {}))
+        common {:id 1 :text "常用药物" :children commonlist}
+
+         ]
+      (resp/json  [common])
+    )
 
   )
 (defn getilldetailbyid [illid]
@@ -161,7 +183,8 @@
          content (client/post url {:body content  :content-type  "application/soap+xml; charset=utf-8"   :socket-timeout 10000
                                    :conn-timeout 10000})       ;:form-params (dissoc query-params "url")
          ]
-    (:body content)
+    (resp/xml (:body content))
+
     )
   ;(resp/json {:success true})
 

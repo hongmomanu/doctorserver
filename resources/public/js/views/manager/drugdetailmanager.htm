@@ -1,0 +1,34 @@
+<table id="drugdetailmanagerpanel">
+    <thead>
+    <tr>
+        <th data-options="field:'name',width:80">Item ID</th>
+        <th data-options="field:'parentids',width:100,
+
+                        editor:{
+                            type:'combotree',
+                            options:{
+                                method:'get',
+                                multiple:true,
+                                onlyLeafCheck:true,
+                                url:'../hospital/getallclassify',
+                                required:true
+                            }
+                        }">Product</th>
+        <th data-options="field:'drugtype',width:80,align:'right',editor:{type:'textbox'}">drugtype</th>
+        <th data-options="field:'drugelement',width:80,align:'right',editor:'textbox'">drugelement</th>
+        <th data-options="field:'drugdose',width:250,editor:'textbox'">drugdose</th>
+        <th data-options="field:'indications',width:60,align:'center',editor:{type:'textbox'}">Indications</th>
+        <th data-options="field:'prohibition',width:60,align:'center',editor:{type:'textbox'}">prohibition</th>
+        <th data-options="field:'precautions',width:60,align:'center',editor:{type:'textbox'}">Precautions</th>
+        <th data-options="field:'adversereactions',width:60,align:'center',editor:{type:'textbox'}">Adverse reactions</th>
+    </tr>
+    </thead>
+</table>
+
+<div id="drugdetailpaneltb" style="height:auto">
+    <!--<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" >Append</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" >Remove</a>-->
+    <a href="javascript:void(0)" class="easyui-linkbutton save" data-options="iconCls:'icon-save',plain:true" >保存</a>
+    <!--<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-undo',plain:true" >Reject</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" >GetChanges</a>-->
+</div>
