@@ -114,13 +114,40 @@
 
   )
 
-(defn getallclassify []
-  (let [
+
+
+
+(defn getallclassify [id]
+  #_(let [
         commonlist (map #(conj {} {:text (:name %) :id (str (:_id %))}) (db/getcommondrugs-by-cond {}))
         common {:id 1 :text "常用药物" :children commonlist}
 
          ]
       (resp/json  [common])
+    )
+
+  (let [
+
+         common {:id 1 :text "常用药物"  :state "closed"}
+
+         classify {:id "root" :text "药物分类"  :state "closed"}
+
+         result (if (nil? id) [common classify] (let [
+
+                                                       items (if (= id "1")(db/getcommondrugs-by-cond {})
+                                                               (db/get-drugsclassify-by-cond {:parentid id})
+                                                               )
+                                                       itemsfilter (map #(conj {} {:id (str (:_id %)) :text (:name %)
+                                                                                :state (if (> (db/get-drugsclassifynum-by-cond {:parentid (str (:_id %))}) 0)
+                                                                                         "closed"
+                                                                                         "open"
+                                                                                         )}) items)
+                                                       ]
+                                                  itemsfilter
+
+                                                  ))
+         ]
+    (resp/json  result)
     )
 
   )

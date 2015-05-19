@@ -70,9 +70,9 @@
     (hospital/getcommondrugs )
 
     )
-  (GET "/hospital/getallclassify" []
+  (GET "/hospital/getallclassify" [id]
 
-    (hospital/getallclassify )
+    (hospital/getallclassify id)
 
     )
   (GET "/hospital/getdrugsbypid" [pid]
