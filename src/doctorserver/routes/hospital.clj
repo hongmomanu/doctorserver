@@ -79,6 +79,17 @@
     (hospital/getallclassify id)
 
     )
+  (POST "/hospital/removeclassifybyid" [id]
+
+    (hospital/removeclassifybyid id)
+
+    )
+
+  (POST "/hospital/updateorinsertclassify" [id name parentid]
+
+    (hospital/updateorinsertclassify id name parentid)
+
+    )
   (GET "/hospital/getclassifytree" [id]
 
     (hospital/getclassifytree id)

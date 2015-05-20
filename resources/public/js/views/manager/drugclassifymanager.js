@@ -20,13 +20,13 @@ define(function () {
 
                         var success=function(){
                             $.messager.alert('操作成功','成功!');
-                            var parent= $('#drugclassifytree').tree('getParent',node);
-                            $('#drugclassifytree').tree('reload',parent);
+                            var parent= $('#drugclassifytree').tree('getParent',node.target);
+                            $('#drugclassifytree').tree('reload',parent.target);
                         };
                         var errorfunc=function(){
                             $.messager.alert('操作失败','失败!');
                         };
-                        var params= {name:node.text,parentid:node.parentid,_id:node.id};
+                        var params= {name:node.text,parentid:node.parentid,id:node.id};
                         ajaxfrom.ajaxsend('post','json','../hospital/updateorinsertclassify',params,success,null,errorfunc);
 
                     });
@@ -56,7 +56,24 @@ define(function () {
             });
         };
         var remove=function(){
-            alert(1);
+            var t = $('#drugclassifytree');
+            var node = t.tree('getSelected');
+
+            require(['../js/commonfuncs/AjaxForm.js']
+                ,function(ajaxfrom){
+
+                    var success=function(){
+                        $.messager.alert('操作成功','成功!');
+                        var parent= $('#drugclassifytree').tree('getParent',node.target);
+                        $('#drugclassifytree').tree('reload',parent.target);
+                    };
+                    var errorfunc=function(){
+                        $.messager.alert('操作失败','失败!');
+                    };
+                    var params= {id:node.id};
+                    ajaxfrom.ajaxsend('post','json','../hospital/removeclassifybyid',params,success,null,errorfunc);
+
+                });
         };
 
 

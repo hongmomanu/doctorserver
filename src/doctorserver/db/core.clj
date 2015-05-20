@@ -171,6 +171,10 @@
     db "drugsclassify" cond
     )
   )
+
+(defn del-classify-by-id [oid]
+  (mc/remove-by-id db "drugsclassify" oid)
+  )
 (defn get-assayclassify-by-cond [cond]
 
   (mc/find-maps
@@ -324,6 +328,15 @@
 
   (mc/update db "recommend" cond {$set recommend} {:upsert true})
 
+  )
+
+(defn updateclassify [oid classify]
+
+  (mc/update-by-id db "drugsclassify" oid {$set classify})
+  )
+(defn insertclassify [ classify]
+
+  (mc/insert db "drugsclassify" classify)
   )
 
 (defn makedoctorsvspatients [cond recommend]

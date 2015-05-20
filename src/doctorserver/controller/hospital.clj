@@ -142,7 +142,7 @@
 
            items  (db/get-drugsclassify-by-cond {:parentid id})
 
-           itemsfilter (map #(conj {} {:id (str (:_id %)) :text (:name %)
+           itemsfilter (map #(conj % {:id (str (:_id %)) :text (:name %)
                                        :state (if (> (db/get-drugsclassifynum-by-cond {:parentid (str (:_id %))}) 0)
                                                 "closed"
                                                 "open"
@@ -157,6 +157,25 @@
 
     )
     )
+
+
+(defn removeclassifybyid [id]
+  (db/del-classify-by-id (ObjectId. id))
+  (resp/json {:success true})
+
+  )
+
+(defn updateorinsertclassify [id name parentid]
+  (let [
+         item {:name name :parentid parentid}
+
+         ]
+
+    (if (nil? id) (db/insertclassify item) (db/updateclassify (ObjectId. id) item))
+    (resp/json {:success true})
+    )
+
+  )
 
 
 
@@ -180,7 +199,7 @@
                                                        items (if (= id "1")(db/getcommondrugs-by-cond {})
                                                                (db/get-drugsclassify-by-cond {:parentid id})
                                                                )
-                                                       itemsfilter (map #(conj {} {:id (str (:_id %)) :text (:name %)
+                                                       itemsfilter (map #(conj % {:id (str (:_id %)) :text (:name %)
                                                                                 :state (if (> (db/get-drugsclassifynum-by-cond {:parentid (str (:_id %))}) 0)
                                                                                          "closed"
                                                                                          "open"
