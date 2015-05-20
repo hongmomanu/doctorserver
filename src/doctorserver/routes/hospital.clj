@@ -56,6 +56,14 @@
   (POST "/hospital/editdrugdata"[drugdata]
     (hospital/editdrugdata drugdata)
     )
+
+  (POST "/hospital/editcommondrugdata"[commondata]
+    (hospital/editcommondrugdata commondata)
+    )
+
+  (POST "/hospital/insertcommondrugdata"[commondata]
+    (hospital/insertcommondrugdata commondata)
+    )
  (POST "/hospital/insertdrugdata"[drugdata]
     (hospital/insertdrugdata drugdata)
     )

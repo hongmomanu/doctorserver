@@ -90,8 +90,17 @@
   (mc/update db "drugdetail" {:_id id} {$set item} )
   )
 
+(defn editommondrugdata [item id]
+  (mc/update db "commondrugs" {:_id id} {$set item} )
+  )
+
 (defn insertdrugdatas [datas]
   (mc/insert-batch db "drugdetail" datas)
+  )
+
+(defn insertcommondrugdatas [datas]
+  (mc/insert-batch db "commondrugs" datas)
+
   )
 
 

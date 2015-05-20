@@ -25,6 +25,23 @@ define(function () {
             var updated=$('#commondrugmanager').datagrid('getChanges','updated');
             if(inserted.length>0){
 
+
+                require(['../js/commonfuncs/AjaxForm.js']
+                    ,function(ajaxfrom){
+
+                        var success=function(){
+                            $.messager.alert('操作成功','成功!');
+                            $('#commondrugmanager').datagrid('acceptChanges');
+                            $('#commondrugmanager').datagrid('reload');
+                        };
+                        var errorfunc=function(){
+                            $.messager.alert('操作失败','失败!');
+                        };
+                        var params= {commondata:$.toJSON(inserted)};
+                        ajaxfrom.ajaxsend('post','json','../hospital/insertcommondrugdata',params,success,null,errorfunc);
+
+                    });
+
             }
 
             if(updated.length>0){
@@ -40,7 +57,7 @@ define(function () {
                         var errorfunc=function(){
                             $.messager.alert('操作失败','失败!');
                         };
-                        var params= {illdata:$.toJSON(updated)};
+                        var params= {commondata:$.toJSON(updated)};
                         ajaxfrom.ajaxsend('post','json','../hospital/editcommondrugdata',params,success,null,errorfunc);
 
                     });

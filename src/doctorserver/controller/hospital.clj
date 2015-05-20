@@ -97,6 +97,23 @@
     )
   )
 
+(defn editcommondrugdata [commomndatas]
+  (println commomndatas)
+  (let [items (json/read-str commomndatas :key-fn keyword)]
+    (dorun (map #(do (db/editommondrugdata  (dissoc % :_id)  (ObjectId. (:_id %)))) items))
+    (resp/json {:success true})
+    )
+  )
+
+(defn insertcommondrugdata [commomndatas]
+  (let [items (json/read-str commomndatas :key-fn keyword)
+        ]
+    (db/insertcommondrugdatas items)
+    (resp/json {:success true})
+    )
+
+  )
+
 (defn insertdrugdata [drugdatas]
 
   (let [items (json/read-str drugdatas :key-fn keyword)
