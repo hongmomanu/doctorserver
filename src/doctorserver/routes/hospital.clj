@@ -53,6 +53,13 @@
     (hospital/editilldata illdata)
     )
 
+  (POST "/hospital/editdrugdata"[drugdata]
+    (hospital/editdrugdata drugdata)
+    )
+ (POST "/hospital/insertdrugdata"[drugdata]
+    (hospital/insertdrugdata drugdata)
+    )
+
   (POST "/hospital/getdeptsbycode"[codes]
     (hospital/getdeptsbycode codes)
     )

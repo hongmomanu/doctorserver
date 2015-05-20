@@ -88,6 +88,25 @@
     (resp/json {:success true})
     )
   )
+
+(defn editdrugdata [drugdatas]
+
+  (let [items (json/read-str drugdatas :key-fn keyword)]
+    (dorun (map #(do (db/editdrugdata (conj (dissoc % :_id) {:parentids  (clojure.string/split (:parentids %) #",")}) (ObjectId. (:_id %)))) items))
+    (resp/json {:success true})
+    )
+  )
+
+(defn insertdrugdata [drugdatas]
+
+  (let [items (json/read-str drugdatas :key-fn keyword)
+        itemsinserted (map #(conj % {:parentids  (clojure.string/split (:parentids %) #",")})  items)
+
+        ]
+    (db/insertdrugdatas itemsinserted)
+    (resp/json {:success true})
+    )
+  )
 (defn getpossibleillsbypage [rowsname totalname page limit]
 
   (let [

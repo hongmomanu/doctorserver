@@ -86,6 +86,14 @@
   (mc/update db "illdata" {:_id id} {$set item} )
   )
 
+(defn editdrugdata [item id]
+  (mc/update db "drugdetail" {:_id id} {$set item} )
+  )
+
+(defn insertdrugdatas [datas]
+  (mc/insert-batch db "drugdetail" datas)
+  )
+
 
 (defn getilldatanum []
 
