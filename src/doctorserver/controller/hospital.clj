@@ -49,7 +49,10 @@
 (defn getmenusbytype [type]
 
   (resp/json (case type
-    "功能配置" [{:text "疾病管理" :value "possibleillmanager"} {:text "常见药物" :value "commondrugmanager"}{:text "药物明细" :value "drugdetailmanager"}]
+    "功能配置" [{:text "疾病管理" :value "possibleillmanager"}
+            {:text "常见药物" :value "commondrugmanager"}
+            {:text "药物分类" :value "drugclassifymanager"}
+            {:text "药物明细" :value "drugdetailmanager"}]
 
    [])
     )
@@ -129,6 +132,31 @@
 
   )
 
+
+
+(defn getclassifytree [id]
+
+  (if (nil? id) (resp/json  [{:text "药物分类" :id "root" :state "closed" }])
+
+    (let [
+
+           items  (db/get-drugsclassify-by-cond {:parentid id})
+
+           itemsfilter (map #(conj {} {:id (str (:_id %)) :text (:name %)
+                                       :state (if (> (db/get-drugsclassifynum-by-cond {:parentid (str (:_id %))}) 0)
+                                                "closed"
+                                                "open"
+                                                )}) items)
+           ]
+
+      (resp/json  itemsfilter)
+
+      )
+
+
+
+    )
+    )
 
 
 

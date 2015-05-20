@@ -79,6 +79,11 @@
     (hospital/getallclassify id)
 
     )
+  (GET "/hospital/getclassifytree" [id]
+
+    (hospital/getclassifytree id)
+
+    )
   (GET "/hospital/getdrugsbypid" [pid]
 
     (hospital/getdrugsbypid pid)
