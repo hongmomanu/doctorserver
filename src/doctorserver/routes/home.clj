@@ -75,6 +75,14 @@
 
     )
 
+
+  (GET "/getbigscreendata" [sortno]
+    
+    (nresp/json [{:sicktype "m" :section "section" :patname "王小明1"
+                 :roomno "12" :showno "A001" :sortno 1 :stateflag "rd" :checkdt "2015-05-27 10:59:59"}])
+
+    )
+
   (POST "/common/uploadfile"  [file ]
 
     (let [

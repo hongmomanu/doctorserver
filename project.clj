@@ -24,11 +24,20 @@
                  [com.novemberain/monger "2.0.1"]
                  [lib-noir "0.9.1"]
                  [org.clojure/data.json "0.2.6"]
+                 [pay/chinaums "2.0.4"]
                  [http-kit "2.1.16"]
+                 [log4j
+                  "1.2.17"
+                  :exclusions
+                  [javax.mail/mail
+                   javax.jms/jms
+                   com.sun.jdmk/jmxtools
+                   com.sun.jmx/jmxri]]
                  [clj-time "0.8.0"]
                  [cheshire "5.1.1"]
                  [clj.qrgen "0.3.0"]
-                 [clj-http "0.9.2"]
+                 ;[clj-http "0.9.2"]
+                 [clj-http "1.1.2"]
                  ]
 
   :min-lein-version "2.0.0"
