@@ -1,5 +1,5 @@
 (ns doctorserver.controller.pay
-  (:use compojure.core)
+  (:use compojure.core org.httpkit.server)
   (:require [doctorserver.db.core :as db]
             ;[doctorserver.public.common :as common]
             [noir.response :as resp]
@@ -35,16 +35,29 @@
 (def signKeyMod (str "83beb97d3aa44b696b2e1633d6d6fe5ec2b86d2d8ba8437c5c4bcac0530b7d50f03af18dee28f7ebd8859d7063254f3751c1c3594a6146e430ea442489b8fb46dc38c34f42241b0783044b459ce8b377006bc7b1a3b58f41ad772ff65846f4946e9d68e1d78564f89b70b2c713c0e6efbb03100e317eb3214d9ed072fbee3a07"))
 (def signKeyExp (str "1e4c5e9c4e403a97a3ee956c969c1b23efe43a379f46b33e867b67c59353b11e4c21422c41f96a0af360c7347198c2ff15ee59decf1c50116aae75bd716ef95a9dffd055bc872dc840a53f1d8fdbf08430efa394f8fe7ffc708ccbf4b9d46f6c833a415e57abd811d4b2b1aee64f59e1b87a74986fc7bd04514f924b5550a901"))
 (def merNoticeUrl (str ""))
-(def respUrl (str "http://192.168.2.100:3000/"))
+(def respUrl (str "http://192.168.2.100:3000/pay/payfinish?patientid="))
 (def bankName (str "huaxia"))
 (def cardType (str "d"))
 
 (declare testCreateOrder)
-(defn makeunionpay [money]
+
+(defn payfinish [respCode amount patientid channel-hub-key]
+  (let [
+         channel (get @channel-hub-key patientid)
+         ispayed (if (= respCode "0000") true false)
+         ]
+    (when-not (nil? channel)
+      (send! channel (json/write-str {:type "payfinish" :data {:success ispayed :amount amount} } ) false)
+      )
+
+    )
+
+  )
+(defn makeunionpay [money patientid]
     (let [
 
          my-cs (clj-http.cookies/cookie-store)
-        orderobj (testCreateOrder money)
+        orderobj (testCreateOrder money patientid)
          params (map #(conj {} {:name  (name %) :value (get orderobj %)}) (keys orderobj))
         ]
       ;(println "hahaha" orderobj)
@@ -74,7 +87,7 @@
     )
 )
 
-(defn testCreateOrder [money]
+(defn testCreateOrder [money patientid]
   (let [ss (new DefaultSecurityService)
         service (new UMSPayServiceImpl)
         sf (new SimpleDateFormat "yyyyMMddHHmmss" Locale/US)
@@ -99,7 +112,7 @@
     (.setOrderDesc order "e医通充值");// 订单描述
     (.setNotifyUrl order merNoticeUrl);// 通知商户地址,保证外网能够访问
     (.setTransType order "NoticePay");// 固定值
-    (.setEffectiveTime order "0");// 订单有效期期限(秒),值小于等于 0 表示订单长期有效
+    (.setEffectiveTime order "300");// 订单有效期期限(秒),值小于等于 0 表示订单长期有效
     (.setMerSign order (.sign ss (.buildSignString order)));
     (println (str "下单请求数据:"  order));
 
@@ -112,7 +125,7 @@
           {:merSign (.sign ss(str (.getTransId respOrder) (.getChrCode respOrder)))
            :chrCode   (.getChrCode respOrder)
            :tranId (.getTransId respOrder)
-           :url respUrl
+           :url (str respUrl patientid)
            :mchantUserCode mchantUserCode
            ;:bankName bankName
            ;:cardType cardType
