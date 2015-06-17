@@ -36,7 +36,12 @@
       (-> site-defaults
                   (assoc-in [:session :store] (memory-store session/mem))
                   ;;disable anti-forgery protection
-                  (assoc-in [:security :anti-forgery] false))
+                  (assoc-in [:security :anti-forgery] false)
+                  (assoc-in [:security :frame-options] false)
+
+
+
+        )
 
         )
       (wrap-internal-error :log #(timbre/error %))))
