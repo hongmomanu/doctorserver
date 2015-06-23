@@ -25,6 +25,7 @@
         wrap-exceptions)
     handler))
 
+
 (defn production-middleware [handler]
   (-> handler
       
@@ -38,10 +39,10 @@
                   ;;disable anti-forgery protection
                   (assoc-in [:security :anti-forgery] false)
                   (assoc-in [:security :frame-options] false)
-
-
-
         )
-
         )
       (wrap-internal-error :log #(timbre/error %))))
+
+
+
+
